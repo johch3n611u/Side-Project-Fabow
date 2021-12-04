@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "angular-vector-249608": {
+      "hosting": {
+        "Fabow": [
+          "angular-vector-249608"
+        ]
+      }
+    }
+  }
+}
