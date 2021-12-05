@@ -5,6 +5,7 @@
     <input *ngIf="!Admin && this.User==''" type="text" placeholder="密碼" class="form-control InputCol Mgbtn" id="Password" name="Password" [(ngModel)]="Password">
     <button *ngIf="!Admin && this.User==''" type="submit" class="btn btn-secondary Mgbtn" (click)="FakeLogin()">登入</button>
     <button *ngIf="Admin" type="submit" class="btn btn-secondary" [routerLink]="['/edit-task']">新增指派項目</button>
+    <button type="submit" class="btn btn-secondary" [routerLink]="['/user']">控制台</button>
 </div>
 <hr>
 <div style="display:flex;line-height: 50px;">
