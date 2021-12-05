@@ -1,34 +1,29 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DoneTasksComponent } from './pages/done-tasks/done-tasks.component';
 import { EditTaskComponent } from './pages/edit-task/edit-task.component';
-import { UndoneTasksComponent } from './pages/undone-tasks/undone-tasks.component';
-import { UserLoginComponent } from './pages/user-login/user-login.component';
-import { UserRegisterComponent } from './pages/user-register/user-register.component';
+import { TasksComponent } from './pages/tasks/tasks.component';
+import { UsersComponent } from './pages/users/users.component';
 
 const routes: Routes = [
     {
-        path: 'register',
-        component: UserRegisterComponent,
-    }, {
-        path: 'login',
-        component: UserLoginComponent,
+        path: 'users',
+        component: UsersComponent,
     },
     {
-        path: 'done-tasks',
-        component: DoneTasksComponent,
-    },
-    {
-        path: 'undone-tasks',
-        component: UndoneTasksComponent,
+        path: 'tasks',
+        component: TasksComponent,
     },
     {
         path: 'edit-task',
         component: EditTaskComponent,
     },
     {
+        path: 'edit-task/:Name',
+        component: EditTaskComponent,
+    },
+    {
         path: '**',
-        redirectTo: 'login',
+        redirectTo: 'tasks',
         pathMatch: 'full'
     },
 ];

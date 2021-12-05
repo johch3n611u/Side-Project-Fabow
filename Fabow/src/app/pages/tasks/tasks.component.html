@@ -1,0 +1,63 @@
+<h2 class="MgTitle">指派項目</h2>
+<span *ngIf="User!=''" class="Mgbtn" style="line-height: 37px;">您好 {{User}}</span>
+<div style="display: flex;">
+    <input *ngIf="!Admin && this.User==''" type="text" placeholder="暱稱" class="form-control InputCol" id="Name" name="Name" [(ngModel)]="Name">
+    <input *ngIf="!Admin && this.User==''" type="text" placeholder="密碼" class="form-control InputCol Mgbtn" id="Password" name="Password" [(ngModel)]="Password">
+    <button *ngIf="!Admin && this.User==''" type="submit" class="btn btn-secondary Mgbtn" (click)="FakeLogin()">登入</button>
+    <button *ngIf="Admin" type="submit" class="btn btn-secondary" [routerLink]="['/edit-task']">新增指派項目</button>
+</div>
+<hr>
+<div style="display:flex;line-height: 50px;">
+    <div [ngClass]="{'TasksActive': TasksActive == '進行中'}" class="TasksBtn" (click)="FilterTasks('進行中')">進行中</div>
+    <div [ngClass]="{'TasksActive': TasksActive == '結案'}" class="TasksBtn" (click)="FilterTasks('結案')">結案</div>
+</div>
+<hr>
+
+<ol *ngIf="TasksActive == '進行中'">
+    <li *ngFor="let Task of UndoneTasks;let i = index;">
+        <ul>
+            <li>
+                <button *ngIf="Admin" class="btn btn-secondary" (click)="CloseTask(Task.id)">結案</button>
+                <button *ngIf="Admin" class="btn btn-secondary Mgbtn" [routerLink]="['/edit-task']" [queryParams]="{ Name: Task.id }">編輯</button>
+                <span class="RedW">編輯時間</span>：{{Task.Date|date:'[ yyyy-MM-dd ] a hh:mm '}}、
+                <span class="RedW">負責人</span>：{{Task.Principal}}
+            </li>
+            <li>
+                <a (click)="Task.RemarkBtn = !Task.RemarkBtn"> ( 點擊回報 ) <span class="RedW">指派項目</span>：{{Task.Task}}</a>
+                <ul *ngIf="Task.RemarkBtn">
+                    <li *ngFor="let Remark of Task.Remarks">
+                        {{Remark.Date|date:'[ yyyy-MM-dd ] a hh:mm '}} => {{Remark.Principal}}：{{Remark.Info}}
+                    </li>
+                    <hr>
+                    <div class="row">
+                        <select class="form-control InputCol Mgbtn" id="Principal" [(ngModel)]="Principal">
+                            <option value="">請選擇</option>
+                            <option *ngFor="let User of Users;let i = index;" [value]="User.Name">{{User.Name}}</option>
+                        </select>
+                        <input placeholder="e.g. 已完成" type="text" class="form-control Mgbtn InputCol" id="Remark" name="Remark" [(ngModel)]="Remark">
+                        <button class="btn btn-secondary Mgbtn" (click)="TaskAddMessage(Task)">回報</button>
+                    </div>
+                </ul>
+            </li>
+        </ul>
+    </li>
+</ol>
+
+<ol *ngIf="TasksActive == '結案'">
+    <li *ngFor="let Task of DoneTasks;let i = index;">
+        <ul>
+            <li>
+                <span class="RedW">編輯時間</span>：{{Task.Date|date:'[ yyyy-MM-dd ] a hh:mm '}}、
+                <span class="RedW">負責人</span>：{{Task.Principal}}
+            </li>
+            <li>
+                <a (click)="Task.RemarkBtn = !Task.RemarkBtn"> ( 點擊回報 ) <span class="RedW">指派項目</span>：{{Task.Task}}</a>
+                <ul *ngIf="Task.RemarkBtn">
+                    <li *ngFor="let Remark of Task.Remarks">
+                        {{Remark.Date|date:'[ yyyy-MM-dd ] a hh:mm '}} => {{Remark.Principal}}：{{Remark.Info}}
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+</ol>

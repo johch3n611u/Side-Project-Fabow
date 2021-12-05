@@ -1,18 +1,16 @@
-<p>edit-task works!</p>
-<button type="submit" class="btn btn-secondary Mgbtn" (click)="ReturnPage()">返回上一頁</button>
-<button type="submit" class="btn btn-secondary Mgbtn" (click)="Logout()">登出</button>
+<h2 class="MgTitle">{{Title}}工作項目</h2>
+<div style="display: flex;">
+    <button type="submit" class="btn btn-secondary Mgbtn" [routerLink]="['/tasks']">返回指派項目</button>
+</div>
 <hr>
-<form>
-    <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label">日期</label>
-        <input disabled type="email" class="form-control" id="exampleInputEmail1" name="exampleInputEmail1" aria-describedby="emailHelp" [(ngModel)]="Date">
-    </div>
-    <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label">負責人員</label>
-        <input disabled type="text" class="form-control" id="Principal" name="Principal" aria-describedby="emailHelp" [(ngModel)]="Principal">
-    </div>
-    <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label">工作項目</label>
-        <textarea></textarea>
-    </div>
-</form>
+<label for="exampleInputEmail1" class="form-label Mgbtn">編輯日期</label>
+<p class="Mgbtn">{{Date|date:'[ yyyy-MM-dd ] a hh:mm '}}</p>
+<label for="exampleInputEmail1" class="form-label Mgbtn">負責人員</label>
+<select class="form-control Mgbtn InputCol" id="Principal" [(ngModel)]="Principal">
+    <option value="">請選擇</option>
+    <option *ngFor="let User of Users;let i = index;" [value]="User.Name">{{User.Name}}</option>
+</select>
+<label for="exampleInputEmail1" class="form-label Mgbtn">工作項目</label>
+<textarea class="form-control Mgbtn InputCol" rows="7" [(ngModel)]="Task"></textarea>
+<br>
+<button type="submit" class="btn btn-secondary Mgbtn" (click)="EditTask()">{{Title}}</button>

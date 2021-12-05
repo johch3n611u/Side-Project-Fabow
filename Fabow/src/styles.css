@@ -1,13 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 
 .Mgbtn {
-    margin-left: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.MgTitle {
+    margin-bottom: 50px;
 }
 
 .MgForm {
     margin: auto;
     margin-top: 40vh;
     width: 300px;
+}
+
+.InputCol {
+    width: 200px !important;
 }
 
 table {
@@ -25,4 +34,44 @@ th {
 
 tr:nth-child(even) {
     background-color: #dddddd;
+}
+
+.RedW {
+    color: red;
+}
+
+.TasksBtn {
+    width: 50%;
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
+    border-radius: 6px;
+}
+
+.TasksBtn:hover {
+    color: #fff;
+    background-color: #5a6268;
+    border-color: #545b62;
+    cursor: pointer;
+}
+
+.TasksActive {
+    color: #fff;
+    background-color: #abb3b9;
+    border-color: #9da6af;
+    cursor: pointer;
+}
+
+ul {
+    display: block;
+    /* list-style-type: none; */
+    margin: 30px 0;
+}
+
+li {
+    margin: 20px 0;
+}
+
+a {
+    cursor: pointer;
 }

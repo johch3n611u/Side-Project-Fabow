@@ -1,0 +1,29 @@
+<h2 class="MgTitle">負責人員清單</h2>
+<div style="display: flex;">
+    <button type="submit" class="btn btn-secondary Mgbtn" [routerLink]="['/tasks']">返回工作項目</button>
+    <button *ngIf="Admin" type="submit" class="btn btn-secondary Mgbtn" (click)="AddUser()">新增負責人員</button>
+    <input *ngIf="Admin" type="text" placeholder="暱稱" class="form-control InputCol Mgbtn" id="Name" name="Name" [(ngModel)]="Name">
+    <button *ngIf="!Admin" type="submit" class="btn btn-secondary Mgbtn" (click)="Login()">登入</button>
+    <input *ngIf="!Admin" type="text" placeholder="Email" class="form-control InputCol Mgbtn" id="Email" name="Email" [(ngModel)]="Email">
+    <input type="text" placeholder="密碼" class="form-control InputCol Mgbtn" id="Password" name="Password" [(ngModel)]="Password">
+    <span *ngIf="Admin" class="Mgbtn" style="line-height: 37px;">您好 {{DisplayName}} 管理員</span>
+    <a *ngIf="Admin" class="Mgbtn" style="line-height: 37px;" target="_black" href="https://console.firebase.google.com/u/0/">Firebase 管理</a>
+</div>
+
+<hr>
+<table *ngIf="DisplayName!=''">
+    <thead>
+        <th></th>
+        <th>暱稱</th>
+        <th>密碼</th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let User of Users;let i = index;">
+            <td>
+                <button type="button" class="btn btn-secondary" (click)="RemoveUser(User.key)">刪除</button>
+            </td>
+            <td>{{User.Name}}</td>
+            <td>{{User.Password}}</td>
+        </tr>
+    </tbody>
+</table>
