@@ -22,7 +22,7 @@ const routes: Routes = [
         component: EditTaskComponent,
     },
     {
-        path: '**',
+        path: '***',
         redirectTo: 'tasks',
         pathMatch: 'full'
     },
