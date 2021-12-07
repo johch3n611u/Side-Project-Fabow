@@ -8,7 +8,7 @@
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e",
-        "build:prod": "ng build --prod --build-optimizer ---verbose"
+        "build:prod": "ng build --prod --build-optimizer ---verbose --base-href=/Side-Project-Fabow/"
     },
     "private": true,
     "dependencies": {
