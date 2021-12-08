@@ -19,3 +19,5 @@
 11. [moment 引入錯誤](https://stackoverflow.com/questions/35272832/systemjs-moment-is-not-a-function)
 12. 應用 set => create + update [crud](https://www.bezkoder.com/angular-12-firestore-crud-angularfirestore/)
 13. firebase [crud](https://www.oxxostudio.tw/articles/201905/firebase-firestore.html)
+14. 上版 github page 卡了一段時間 --hraf-base /儲存庫網域/
+15. FCM free [推播實作](https://medium.com/%E5%BD%BC%E5%BE%97%E6%BD%98%E7%9A%84-swift-ios-app-%E9%96%8B%E7%99%BC%E5%95%8F%E9%A1%8C%E8%A7%A3%E7%AD%94%E9%9B%86/%E5%88%A9%E7%94%A8-firebase-cloud-messaging-fcm-%E7%99%BC%E9%80%81%E6%8E%A8%E6%92%AD-b4a9bd4f89d6)

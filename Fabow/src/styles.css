@@ -5,6 +5,15 @@
     margin-right: 10px;
 }
 
+@media only screen and (max-width: 600px) {
+  .MgMobile {
+    margin: 30px 0;
+  }
+  .MgTitle{
+    margin-bottom: 0;
+  }
+}
+
 .MgTitle {
     margin-bottom: 50px;
 }

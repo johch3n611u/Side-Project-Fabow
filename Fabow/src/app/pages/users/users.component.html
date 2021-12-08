@@ -1,17 +1,23 @@
 <h2 class="MgTitle">負責人員清單</h2>
-<div style="display: flex;">
-    <button type="submit" class="btn btn-secondary Mgbtn" [routerLink]="['/tasks']">返回工作項目</button>
-    <button *ngIf="Admin" type="submit" class="btn btn-secondary Mgbtn" (click)="AddUser()">新增負責人員</button>
-    <input *ngIf="Admin" type="text" placeholder="暱稱" class="form-control InputCol Mgbtn" id="Name" name="Name" [(ngModel)]="Name">
-    <button *ngIf="!Admin" type="submit" class="btn btn-secondary Mgbtn" (click)="Login()">登入</button>
-    <input *ngIf="!Admin" type="text" placeholder="Email" class="form-control InputCol Mgbtn" id="Email" name="Email" [(ngModel)]="Email">
-    <input type="text" placeholder="密碼" class="form-control InputCol Mgbtn" id="Password" name="Password" [(ngModel)]="Password">
-    <span *ngIf="Admin" class="Mgbtn" style="line-height: 37px;">您好 {{DisplayName}} 管理員</span>
-    <a *ngIf="Admin" class="Mgbtn" style="line-height: 37px;" target="_black" href="https://console.firebase.google.com/u/0/">Firebase 管理</a>
+<div class="nav nav-tabs">
+    <button type="submit" class="btn btn-secondary Mgbtn col-xs-2 MgMobile" [routerLink]="['/tasks']">返回工作項目</button>
+    <div class="col-xs-2 col-xs-6">
+        <input *ngIf="Admin" type="text" placeholder="暱稱" class="form-control InputCol Mgbtn" id="Name" name="Name"
+            [(ngModel)]="Name">
+        <input *ngIf="!Admin" type="text" placeholder="Email" class="form-control InputCol Mgbtn" id="Email"
+            name="Email" [(ngModel)]="Email">
+        <input type="text" placeholder="密碼" class="form-control InputCol Mgbtn" id="Password" name="Password"
+            [(ngModel)]="Password">
+    </div>
+    <button *ngIf="!Admin" type="submit" class="btn btn-secondary Mgbtn col-md-2" (click)="Login()">登入</button>
+    <button *ngIf="Admin" type="submit" class="btn btn-secondary Mgbtn col-xs-2 MgMobile"
+        (click)="AddUser()">新增負責人員</button>
+    <span *ngIf="Admin" class="Mgbtn col-md-2" style="line-height: 37px;">您好 {{DisplayName}} 管理員</span>
+    <a *ngIf="Admin" class="Mgbtn col-md-2" style="line-height: 37px;" target="_black"
+        href="https://console.firebase.google.com/u/0/">Firebase 管理</a>
 </div>
 
-<hr>
-<table *ngIf="DisplayName!=''">
+<table *ngIf="DisplayName!=''" style="margin-top: 30px;">
     <thead>
         <th></th>
         <th>暱稱</th>
