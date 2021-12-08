@@ -1,7 +1,7 @@
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFireDatabase, AngularFireList } from "@angular/fire/database";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { map } from "rxjs/operators";
 import * as moment from 'moment'
 
@@ -10,6 +10,7 @@ export class BaseComponent {
     constructor(
         public _AngularFireAuth: AngularFireAuth,
         public _Router: Router,
+        public _ActivatedRoute: ActivatedRoute,
         public _CloudFirestore: AngularFirestore,
         public _RealtimeDatabase: AngularFireDatabase,
     ) {
@@ -53,9 +54,11 @@ export class BaseComponent {
                 this.Password = "";
                 this.DisplayName = "";
                 this.Admin = true;
-                this.GetUsers();
+                // this.GetUsers();
+                this._Router.navigateByUrl('/users');
             }).catch((error) => {
-                window.alert(error.message);
+                // window.alert(error.message);
+                window.alert('帳號密碼錯誤，如有問題請詢問管理員');
             })
     }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BaseComponent } from 'src/app/base-component';
 import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
@@ -16,10 +16,11 @@ export class TasksComponent extends BaseComponent implements OnInit {
     constructor(
         public _AngularFireAuth: AngularFireAuth,
         public _Router: Router,
+        public _ActivatedRoute: ActivatedRoute,
         public _CloudFirestore: AngularFirestore,
         public _RealtimeDatabase: AngularFireDatabase,
     ) {
-        super(_AngularFireAuth, _Router, _CloudFirestore, _RealtimeDatabase);
+        super(_AngularFireAuth, _Router, _ActivatedRoute, _CloudFirestore, _RealtimeDatabase);
     }
 
     Tasks: any = [];
@@ -39,16 +40,17 @@ export class TasksComponent extends BaseComponent implements OnInit {
 
         if (this.User != "" || this.Admin) {
 
-            let Collection = this._CloudFirestore.collection('Tasks').snapshotChanges().pipe(map((actions: DocumentChangeAction<any>[]) => {
-                console.log('actions', actions);
-                return actions.map(a => {
-                    const data = a.payload.doc.data() as any;
-                    const id = a.payload.doc.id;
-                    console.log('a', a);
-                    console.log('data', data);
-                    return { id, ...data };
-                });
-            }));
+            let Collection = this._CloudFirestore.collection('Tasks', ref => ref.orderBy('Date'))
+                .snapshotChanges().pipe(map((actions: DocumentChangeAction<any>[]) => {
+                    console.log('actions', actions);
+                    return actions.map(a => {
+                        const data = a.payload.doc.data() as any;
+                        const id = a.payload.doc.id;
+                        console.log('a', a);
+                        console.log('data', data);
+                        return { id, ...data };
+                    });
+                }));
 
             Collection.subscribe(res => {
                 this.DoneTasks = [];
@@ -105,7 +107,9 @@ export class TasksComponent extends BaseComponent implements OnInit {
         });
         console.log('this.User', this.User);
         if (this.User == "") {
-            alert('請確定帳號與密碼，或聯絡管理員');
+            // alert('請確定帳號與密碼，或聯絡管理員');
+            this.Email = this.Name;
+            this.Login();
         } else {
             this.GetTasks();
         }
@@ -149,6 +153,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
             Remarks: Task.Remarks,
         }).then(res => {
             Task.RemarkBtn = true;
+            this.Remark = "";
         });
     }
 }

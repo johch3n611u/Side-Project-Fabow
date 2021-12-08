@@ -26,7 +26,7 @@ export class EditTaskComponent extends BaseComponent implements OnInit {
         public _RealtimeDatabase: AngularFireDatabase,
         public _CloudFirestore: AngularFirestore,
     ) {
-        super(_AngularFireAuth, _Router, _CloudFirestore, _RealtimeDatabase)
+        super(_AngularFireAuth, _Router, _ActivatedRoute, _CloudFirestore, _RealtimeDatabase)
     }
 
     ngOnInit(): void {

@@ -1,26 +1,24 @@
 <h2 class="MgTitle">負責人員清單</h2>
-<div class="nav nav-tabs">
-    <button type="submit" class="btn btn-secondary Mgbtn col-xs-2 MgMobile" [routerLink]="['/tasks']">返回工作項目</button>
-    <div class="col-xs-2 col-xs-6">
-        <input *ngIf="Admin" type="text" placeholder="暱稱" class="form-control InputCol Mgbtn" id="Name" name="Name"
-            [(ngModel)]="Name">
-        <input *ngIf="!Admin" type="text" placeholder="Email" class="form-control InputCol Mgbtn" id="Email"
-            name="Email" [(ngModel)]="Email">
-        <input type="text" placeholder="密碼" class="form-control InputCol Mgbtn" id="Password" name="Password"
-            [(ngModel)]="Password">
+<div class="col-12">
+    <div class="col-xs-12">
+        <button type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" [routerLink]="['/tasks']">返回工作項目</button>
+        <!-- <button *ngIf="!Admin" type="submit" class="btn btn-secondary Mgbtn col-md-2" (click)="Login()">登入</button> -->
+        <a *ngIf="Admin" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" target="_black" href="https://console.firebase.google.com/u/0/">Firebase 管理</a>
+        <span *ngIf="Admin" class="col-xs-12 col-md-2" style="line-height: 37px;">您好 {{DisplayName}} 管理員</span>
     </div>
-    <button *ngIf="!Admin" type="submit" class="btn btn-secondary Mgbtn col-md-2" (click)="Login()">登入</button>
-    <button *ngIf="Admin" type="submit" class="btn btn-secondary Mgbtn col-xs-2 MgMobile"
-        (click)="AddUser()">新增負責人員</button>
-    <span *ngIf="Admin" class="Mgbtn col-md-2" style="line-height: 37px;">您好 {{DisplayName}} 管理員</span>
-    <a *ngIf="Admin" class="Mgbtn col-md-2" style="line-height: 37px;" target="_black"
-        href="https://console.firebase.google.com/u/0/">Firebase 管理</a>
+    <div class="col-xs-12">
+        <input class="form-control InputCol Mgbtn col-xs-12 col-md-2" *ngIf="Admin" type="text" placeholder="帳號" id="Name" name="Name" [(ngModel)]="Name">
+        <!-- <input *ngIf="!Admin" type="text" placeholder="Email" class="form-control InputCol Mgbtn" id="Email"
+            name="Email" [(ngModel)]="Email"> -->
+        <input class="form-control InputCol Mgbtn col-xs-12 col-md-2" type="text" placeholder="密碼" id="Password" name="Password" [(ngModel)]="Password">
+        <button *ngIf="Admin" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" (click)="AddUser()">新增負責人員</button>
+    </div>
 </div>
 
 <table *ngIf="DisplayName!=''" style="margin-top: 30px;">
     <thead>
         <th></th>
-        <th>暱稱</th>
+        <th>帳號</th>
         <th>密碼</th>
     </thead>
     <tbody>

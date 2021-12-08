@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BaseComponent } from 'src/app/base-component';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { map } from 'rxjs/operators';
@@ -16,10 +16,11 @@ export class UsersComponent extends BaseComponent implements OnInit {
     constructor(
         public _AngularFireAuth: AngularFireAuth,
         public _Router: Router,
+        public _ActivatedRoute: ActivatedRoute,
         public _CloudFirestore: AngularFirestore,
         public _RealtimeDatabase: AngularFireDatabase,
     ) {
-        super(_AngularFireAuth, _Router, _CloudFirestore, _RealtimeDatabase)
+        super(_AngularFireAuth, _Router, _ActivatedRoute, _CloudFirestore, _RealtimeDatabase)
     }
 
 
@@ -36,6 +37,8 @@ export class UsersComponent extends BaseComponent implements OnInit {
                     this.Users = res;
                 });
             this.Admin = true;
+        } else {
+            this._Router.navigateByUrl('/tasks');
         }
     }
 
