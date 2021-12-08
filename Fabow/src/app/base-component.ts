@@ -53,6 +53,7 @@ export class BaseComponent {
                 this.Password = "";
                 this.DisplayName = "";
                 this.Admin = true;
+                this.GetUsers();
             }).catch((error) => {
                 window.alert(error.message);
             })
