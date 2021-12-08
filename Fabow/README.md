@@ -24,7 +24,8 @@
 16. ag [FCM](https://ithelp.ithome.com.tw/articles/10196749)
 17. AG [FCM](https://ithelp.ithome.com.tw/m/articles/10196749)
 18. [PWA 相關](https://jonny-huang.github.io/angular/training/19_pwa/)
-19. [PWA 基礎](https://ithelp.ithome.com.tw/articles/10197329)
+19. [PWA 基礎](https://ithelp.ithome.com.tw/articles/10197329) *******
 20. [PWA 更版](https://blog.kevinyang.net/2018/09/07/angular-sw-update/)
 21. `install --save @angular/service-worker`
 22. [ADD PWA](https://www.twblogs.net/a/5d745167bd9eee541c3423d9)
+23. `ng add @angular/pwa`

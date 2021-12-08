@@ -12,6 +12,7 @@ import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common
 import { TasksComponent } from './pages/tasks/tasks.component';
 import { UsersComponent } from './pages/users/users.component';
 import { EditTaskComponent } from './pages/edit-task/edit-task.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
     declarations: [
@@ -26,6 +27,12 @@ import { EditTaskComponent } from './pages/edit-task/edit-task.component';
         AppRoutingModule,
         AngularFireModule.initializeApp(environment.firebase),
         FormsModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {
+          enabled: environment.production,
+          // Register the ServiceWorker as soon as the app is stable
+          // or after 30 seconds (whichever comes first).
+          registrationStrategy: 'registerWhenStable:30000'
+        }),
     ],
     providers: [],
     bootstrap: [AppComponent]
