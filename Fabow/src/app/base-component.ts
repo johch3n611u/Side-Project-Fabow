@@ -111,4 +111,22 @@ export class BaseComponent {
     GetNowDateString() {
         return moment(new Date()).format('YYYY-MM-DDTHH:mm:ss.SSS')
     }
+
+    TranslP(key) {
+        // 「granted」（同意）、「denied」（拒絕）和「default」（未授權）
+        switch (key) {
+            case 'granted':
+                key = '同意';
+                break;
+            case 'denied':
+                key = '拒絕';
+                break;
+            case 'default':
+                key = '未授權';
+                break;
+            default:
+                break;
+        }
+        return key;
+    }
 }

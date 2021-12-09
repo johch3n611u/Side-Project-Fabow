@@ -25,7 +25,10 @@ export class TasksComponent extends BaseComponent implements OnInit {
 
     Tasks: any = [];
     TasksActive = "進行中";
-
+    NotificationStatus = '';
+    ServiceStatus = '未啟用';
+    ServiceWorkSup = '不支援';
+    NotificationSup = '不支援';
     ngOnInit(): void {
 
         // https://ithelp.ithome.com.tw/articles/10196486
@@ -33,30 +36,39 @@ export class TasksComponent extends BaseComponent implements OnInit {
 
         let Noti: any = Notification;
         if ('Notification' in window) {
+            this.NotificationSup = '支援';
             // 如果 window 有支援推播
-            console.log(Noti.permission);
-
-            var notifyConfig = {
-                body: '\\ ^o^ / 歡迎使用 Fabow !!', // 設定內容
-                // icon: '../../../assets/icons/icon-128x128.png', // 設定 icon
-            };
-
-            // permission 可為「granted」（同意）、「denied」（拒絕）和「default」（未授權）
-            if (Noti.permission === 'default' || Noti.permission === 'undefined' || Noti.permission === 'denied') {
-
-                alert('\n ★★★ 請打開通知以接收最新訊息 ★★★ \n\n Chrome 請點選 [ 網址列 ] 左側 ⓘ 開啟通知，感謝!!');
-
-            } else if (Noti.permission === 'granted') {
-                console.log('??');
-                Notification.requestPermission(res => {
-                    // 在這裡可針對使用者的授權做處理
+            // console.log(Noti.permission);
+            this.NotificationStatus = Noti.permission;
+            // 要求授權
+            Notification.requestPermission(res => {
+                // 在這裡可針對使用者的授權做處理
+                // permission 可為「granted」（同意）、「denied」（拒絕）和「default」（未授權）
+                if (Noti.permission === 'default' || Noti.permission === 'undefined' || Noti.permission === 'denied') {
+                    alert('\n 請打開通知以接收最新訊息!!\n\n Chrome 請點選 [ 網址列 ] 左側 ⓘ 開啟通知，感謝!!');
+                } else if (Noti.permission === 'granted') {
                     // 使用者同意授權
-                    var notification = new Notification('Hi 您好!', notifyConfig); // 建立通知
-                    console.log('notification', notification);
-                });
-            }
+                    var notifyConfig = {
+                        body: '\\ ^o^ / 歡迎使用 Fabow !!', // 設定內容
+                        // icon: '../../../assets/icons/icon-128x128.png', // 設定 icon
+                    };
+
+                    if ('serviceWorker' in navigator) {
+                        this.ServiceWorkSup = "支援";
+                        navigator.serviceWorker.ready
+                            .then(res => {
+                                this.ServiceStatus = "進行中";
+                                res.showNotification('Hi 您好!', notifyConfig);
+                            });
+                    } else {
+                        var notification = new Notification('Hi 您好!', notifyConfig); // 建立通知
+                    }
+                }
+            });
 
         }
+
+        // Notification.requestPermission(res => { console.log(Noti.permission); });
 
         this.CheckAdmin();
         this.GetTasks();

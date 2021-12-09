@@ -1,4 +1,5 @@
-<h2 class="MgTitle">指派項目</h2>
+<h2 class="MgTitle" style="display: inline-block;">指派項目</h2>
+<p class="Mgbtn" style="display: inline-block;">支援推播:{{NotificationSup}}、推播權限:{{TranslP(NotificationStatus)}}、支援背景運作:{{NotificationSup}}、背景運作狀態:{{ServiceStatus}}</p>
 <span *ngIf="User!=''" class="Mgbtn" style="line-height: 37px;">您好 {{User}}</span>
 <div class="col-xs-12" style="padding: 0 16px;">
     <input *ngIf="!Admin && this.User==''" type="text" placeholder="帳號" class="form-control InputCol Mgbtn col-xs-12 col-md-2" id="Name" name="Name" [(ngModel)]="Name">
@@ -14,8 +15,8 @@
 </div>
 <hr>
 
-<ol *ngIf="TasksActive == '進行中'" style="padding-left: 20px;">
-    <li *ngFor="let Task of UndoneTasks;let i = index;">
+<ol *ngIf="TasksActive == '進行中'">
+    <li class="card" *ngFor="let Task of UndoneTasks;let i = index;">
         <ul>
             <li>
                 <button *ngIf="Admin" class="btn btn-secondary" (click)="CloseTask(Task.id)">結案</button>
@@ -46,7 +47,7 @@
 </ol>
 
 <ol *ngIf="TasksActive == '結案'">
-    <li *ngFor="let Task of DoneTasks;let i = index;">
+    <li class="card" *ngFor="let Task of DoneTasks;let i = index;">
         <ul>
             <li>
                 <span class="RedW">編輯時間</span>：{{Task.Date|date:'[ yyyy-MM-dd ] a hh:mm '}}、
@@ -54,9 +55,10 @@
             </li>
             <li>
                 <a (click)="Task.RemarkBtn = !Task.RemarkBtn"> ( 點擊回報 ) <span class="RedW">指派項目</span>：{{Task.Task}}</a>
-                <ul class="list" *ngIf="Task.RemarkBtn">
-                    <li *ngFor="let Remark of Task.Remarks">
-                        {{Remark.Principal}}：{{Remark.Info}} ... {{Remark.Date|date:'[ yyyy-MM-dd ] a hh:mm '}}
+                <ul class="list" *ngIf="Task.RemarkBtn" style="padding-left: 0;">
+                    <li *ngFor="let Remark of Task.Remarks" class="d-flex justify-content-around">
+                        <span class="col-xs-12">{{Remark.Principal}}：{{Remark.Info}}</span>
+                        <span class="col-xs-12">{{Remark.Date|date:'[ yyyy-MM-dd ] a hh:mm '}}</span>
                     </li>
                 </ul>
             </li>

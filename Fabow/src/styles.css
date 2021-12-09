@@ -108,12 +108,21 @@ a {
     box-shadow: 0 2px 6px rgb(0 0 0 / 25%) !important;
 }
 
+.card {
+    padding-right: 26px;
+}
+
 .TasksBtn,
 .btn,
+.card,
 table,
 textarea,
 select,
 button,
 input {
     box-shadow: 0 2px 6px rgb(0 0 0 / 25%) !important;
+}
+
+ol {
+    padding-left: 0;
 }
