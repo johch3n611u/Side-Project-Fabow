@@ -1,6 +1,6 @@
 <h2 class="MgTitle">指派項目</h2>
 <span *ngIf="User!=''" class="Mgbtn" style="line-height: 37px;">您好 {{User}}</span>
-<div class="col-xs-12">
+<div class="col-xs-12" style="padding: 0 16px;">
     <input *ngIf="!Admin && this.User==''" type="text" placeholder="帳號" class="form-control InputCol Mgbtn col-xs-12 col-md-2" id="Name" name="Name" [(ngModel)]="Name">
     <input *ngIf="!Admin && this.User==''" type="text" placeholder="密碼" class="form-control InputCol Mgbtn col-xs-12 col-md-2" id="Password" name="Password" [(ngModel)]="Password">
     <button *ngIf="!Admin && this.User==''" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" (click)="FakeLogin()">登入</button>
