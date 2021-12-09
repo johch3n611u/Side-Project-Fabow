@@ -21,15 +21,7 @@ export class BaseComponent {
     Password = "";
     DisplayName = "";
     Admin = false;
-
-    VerifyLogin() {
-        // console.log('document.cookie', document.cookie);
-        this.DisplayName = this.GetCookie('DisplayName');
-        return this.GetCookie('DisplayName');
-        // this._AngularFireAuth.authState.subscribe(res => {
-        //     console.log('VerifyLogin', res);
-        // });
-    }
+    User = "";
 
     ReturnPage() {
         history.go(-1);
@@ -98,14 +90,18 @@ export class BaseComponent {
 
     Users = [];
     CheckAdmin() {
-        if (this.VerifyLogin() != undefined) {
-            this.Admin = true;
-        }
-        this.GetUsers()
-            .subscribe(res => {
-                // console.log('GetUsers', res);
-                this.Users = res;
-            });
+
+        this._AngularFireAuth.authState.subscribe(res => {
+            console.log('res', res);
+            if (res != undefined) {
+                this.Admin = true;
+                this.GetUsers()
+                    .subscribe(res => {
+                        this.Users = res;
+                    });
+            }
+        });
+
     }
 
     GetNowDateString() {
@@ -116,13 +112,13 @@ export class BaseComponent {
         // 「granted」（同意）、「denied」（拒絕）和「default」（未授權）
         switch (key) {
             case 'granted':
-                key = '同意';
+                key = '✔';
                 break;
             case 'denied':
-                key = '拒絕';
+                key = '❌';
                 break;
             case 'default':
-                key = '未授權';
+                key = '❌';
                 break;
             default:
                 break;

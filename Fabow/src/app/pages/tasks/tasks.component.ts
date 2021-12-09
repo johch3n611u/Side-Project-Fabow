@@ -25,18 +25,23 @@ export class TasksComponent extends BaseComponent implements OnInit {
 
     Tasks: any = [];
     TasksActive = "進行中";
-    NotificationStatus = '';
-    ServiceStatus = '未啟用';
-    ServiceWorkSup = '不支援';
-    NotificationSup = '不支援';
+    NotificationStatus = '❌';
+    ServiceStatus = '❌';
+    ServiceWorkSup = '❌';
+    NotificationSup = '❌';
     ngOnInit(): void {
 
+        this.DefaultInit();
+        this.CheckAdmin();
+        this.GetTasks();
+    }
+
+    DefaultInit() {
         // https://ithelp.ithome.com.tw/articles/10196486
         // https://cythilya.github.io/2017/07/09/notification/
-
         let Noti: any = Notification;
         if ('Notification' in window) {
-            this.NotificationSup = '支援';
+            this.NotificationSup = '✔';
             // 如果 window 有支援推播
             // console.log(Noti.permission);
             this.NotificationStatus = Noti.permission;
@@ -54,12 +59,17 @@ export class TasksComponent extends BaseComponent implements OnInit {
                     };
 
                     if ('serviceWorker' in navigator) {
-                        this.ServiceWorkSup = "支援";
+                        this.ServiceWorkSup = "✔";
                         navigator.serviceWorker.ready
                             .then(res => {
-                                this.ServiceStatus = "進行中";
+                                this.ServiceStatus = "✔";
                                 res.showNotification('Hi 您好!', notifyConfig);
                             });
+
+                        if (this.ServiceStatus != "✔") {
+                            var notification = new Notification('Hi 您好!', notifyConfig); // 建立通知
+                        }
+
                     } else {
                         var notification = new Notification('Hi 您好!', notifyConfig); // 建立通知
                     }
@@ -67,11 +77,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
             });
 
         }
-
-        // Notification.requestPermission(res => { console.log(Noti.permission); });
-
-        this.CheckAdmin();
-        this.GetTasks();
     }
 
     Name = "";
@@ -80,6 +85,9 @@ export class TasksComponent extends BaseComponent implements OnInit {
     UndoneTasks = [];
 
     GetTasks() {
+
+        console.log('this.Admin', this.Admin);
+        console.log('this.User', this.User);
 
         if (this.User != "" || this.Admin) {
 
@@ -135,7 +143,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
         }
     }
 
-    User = "";
     FakeLogin() {
 
         this.User = "";
@@ -146,6 +153,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
         this.Users.forEach(element => {
             if (element.Name == this.Name && element.Password == this.Password) {
                 this.User = this.Name;
+                document.cookie = 'DisplayName=' + this.User;
             }
         });
         // console.log('this.User', this.User);

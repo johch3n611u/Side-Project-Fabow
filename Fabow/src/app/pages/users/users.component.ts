@@ -23,26 +23,10 @@ export class UsersComponent extends BaseComponent implements OnInit {
         super(_AngularFireAuth, _Router, _ActivatedRoute, _CloudFirestore, _RealtimeDatabase)
     }
 
-
     Users = [];
     ngOnInit(): void {
         this.CheckAdmin();
     }
-
-    CheckAdmin() {
-        if (this.VerifyLogin() != undefined) {
-            this.GetUsers()
-                .subscribe(res => {
-                    // console.log('GetUsers', res);
-                    this.Users = res;
-                });
-            this.Admin = true;
-        } else {
-            this._Router.navigateByUrl('/tasks');
-        }
-    }
-
-
 
     Name = "";
     AddUser(Key) {
