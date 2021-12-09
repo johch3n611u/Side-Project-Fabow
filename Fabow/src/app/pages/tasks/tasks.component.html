@@ -25,9 +25,10 @@
             </li>
             <li>
                 <a (click)="Task.RemarkBtn = !Task.RemarkBtn"> ( 點擊回報 ) <span class="RedW">指派項目</span>：{{Task.Task}}</a>
-                <ul *ngIf="Task.RemarkBtn" style="padding-left: 0;">
-                    <li *ngFor="let Remark of Task.Remarks">
-                        {{Remark.Date|date:'[ yyyy-MM-dd ] a hh:mm '}} => {{Remark.Principal}}：{{Remark.Info}}
+                <ul class="list" *ngIf="Task.RemarkBtn" style="padding-left: 0;">
+                    <li *ngFor="let Remark of Task.Remarks" class="d-flex justify-content-around">
+                        <span class="col-xs-12">{{Remark.Principal}}：{{Remark.Info}}</span>
+                        <span class="col-xs-12">{{Remark.Date|date:'[ yyyy-MM-dd ] a hh:mm '}}</span>
                     </li>
                     <hr>
                     <div class="row">
@@ -53,9 +54,9 @@
             </li>
             <li>
                 <a (click)="Task.RemarkBtn = !Task.RemarkBtn"> ( 點擊回報 ) <span class="RedW">指派項目</span>：{{Task.Task}}</a>
-                <ul *ngIf="Task.RemarkBtn">
+                <ul class="list" *ngIf="Task.RemarkBtn">
                     <li *ngFor="let Remark of Task.Remarks">
-                        {{Remark.Date|date:'[ yyyy-MM-dd ] a hh:mm '}} => {{Remark.Principal}}：{{Remark.Info}}
+                        {{Remark.Principal}}：{{Remark.Info}} ... {{Remark.Date|date:'[ yyyy-MM-dd ] a hh:mm '}}
                     </li>
                 </ul>
             </li>

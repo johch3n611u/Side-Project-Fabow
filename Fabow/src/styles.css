@@ -87,3 +87,21 @@ li {
 a {
     cursor: pointer;
 }
+
+
+/* 偶數 */
+
+.list li:nth-child(even) {
+    background-color: #abb3b9;
+    padding: 20px;
+    border-radius: 6px;
+}
+
+
+/* 奇數 */
+
+.list li:nth-child(odd) {
+    background-color: #d0d5da;
+    padding: 20px;
+    border-radius: 6px;
+}
