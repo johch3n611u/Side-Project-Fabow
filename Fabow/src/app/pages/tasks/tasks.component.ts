@@ -31,51 +31,57 @@ export class TasksComponent extends BaseComponent implements OnInit {
     NotificationSup = '❌';
     ngOnInit(): void {
 
-        this.DefaultInit();
+        this.NotificationInit();
         this.CheckAdmin();
         this.GetTasks();
     }
 
-    DefaultInit() {
+    NotificationInit() {
         // https://ithelp.ithome.com.tw/articles/10196486
         // https://cythilya.github.io/2017/07/09/notification/
-        let Noti: any = Notification;
+
         if ('Notification' in window) {
-            this.NotificationSup = '✔';
             // 如果 window 有支援推播
-            // console.log(Noti.permission);
+            this.NotificationSup = '✔';
+            let Noti: any = Notification;
             this.NotificationStatus = Noti.permission;
-            // 要求授權
-            Notification.requestPermission(res => {
-                // 在這裡可針對使用者的授權做處理
-                // permission 可為「granted」（同意）、「denied」（拒絕）和「default」（未授權）
-                if (Noti.permission === 'default' || Noti.permission === 'undefined' || Noti.permission === 'denied') {
-                    alert('\n 請打開通知以接收最新訊息!!\n\n Chrome 請點選 [ 網址列 ] 左側 ⓘ 開啟通知，感謝!!');
-                } else if (Noti.permission === 'granted') {
-                    // 使用者同意授權
-                    var notifyConfig = {
-                        body: '\\ ^o^ / 歡迎使用 Fabow !!', // 設定內容
-                        // icon: '../../../assets/icons/icon-128x128.png', // 設定 icon
-                    };
-
-                    if ('serviceWorker' in navigator) {
-                        this.ServiceWorkSup = "✔";
-                        navigator.serviceWorker.ready
-                            .then(res => {
-                                this.ServiceStatus = "✔";
-                                res.showNotification('Hi 您好!', notifyConfig);
-                            });
-
-                        if (this.ServiceStatus != "✔") {
-                            var notification = new Notification('Hi 您好!', notifyConfig); // 建立通知
-                        }
-
-                    } else {
-                        var notification = new Notification('Hi 您好!', notifyConfig); // 建立通知
+            let NotiPNot = Noti.permission === 'default' || Noti.permission === 'undefined' || Noti.permission === 'denied';
+            if (NotiPNot) {
+                // 要求授權
+                Notification.requestPermission(res => {
+                    // 在這裡可針對使用者的授權做處理
+                    // permission 可為「granted」（同意）、「denied」（拒絕）和「default」（未授權）
+                    if (NotiPNot) {
+                        alert('\n 請打開通知以接收最新訊息!!\n\n Chrome 請點選 [ 網址列 ] 左側 ⓘ 開啟通知，感謝!!');
+                    } else if (Noti.permission === 'granted') {
+                        // 使用者同意授權
+                        this.ServiceWorkInit();
                     }
-                }
-            });
+                });
+            }
+        }
+    }
 
+    ServiceWorkInit() {
+        let NotifyConfig = {
+            body: '\\ ^o^ / 歡迎使用 Fabow !!', // 設定內容
+            // icon: '../../../assets/icons/icon-128x128.png', // 設定 icon
+        };
+
+        if ('serviceWorker' in navigator) {
+            this.ServiceWorkSup = "✔";
+            navigator.serviceWorker.ready
+                .then(res => {
+                    this.ServiceStatus = "✔";
+                    res.showNotification('Hi 您好!', NotifyConfig);
+                });
+
+            if (this.ServiceStatus != "✔") {
+                var notification = new Notification('Hi 您好!', NotifyConfig); // 建立通知
+            }
+
+        } else {
+            var notification = new Notification('Hi 您好!', NotifyConfig); // 建立通知
         }
     }
 
