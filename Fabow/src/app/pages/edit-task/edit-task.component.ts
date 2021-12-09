@@ -39,14 +39,14 @@ export class EditTaskComponent extends BaseComponent implements OnInit {
     GetName() {
         this._ActivatedRoute.queryParams.subscribe((queryParams) => {
             this.Name = queryParams['Name'];
-            console.log('Name', queryParams['Name']);
+            // console.log('Name', queryParams['Name']);
             if (this.Name == undefined) {
                 this.Title = '新增';
             } else {
                 this.Title = '編輯';
                 let Collection = this._CloudFirestore.doc('Tasks/' + this.Name).valueChanges();
                 Collection.subscribe((res: any) => {
-                    console.log('res', res);
+                    // console.log('res', res);
                     this.Principal = res.Principal;
                     this.Task = res.Task;
                 })
@@ -56,7 +56,7 @@ export class EditTaskComponent extends BaseComponent implements OnInit {
 
     EditTask() {
 
-        console.log('this.Title', this.Title);
+        // console.log('this.Title', this.Title);
         if (this.Title == '新增') {
             let Collection = this._CloudFirestore.collection('Tasks').add(
                 {

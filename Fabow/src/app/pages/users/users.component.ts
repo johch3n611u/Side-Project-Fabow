@@ -33,7 +33,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
         if (this.VerifyLogin() != undefined) {
             this.GetUsers()
                 .subscribe(res => {
-                    console.log('GetUsers', res);
+                    // console.log('GetUsers', res);
                     this.Users = res;
                 });
             this.Admin = true;
@@ -48,24 +48,24 @@ export class UsersComponent extends BaseComponent implements OnInit {
     AddUser(Key) {
         this._RealtimeDatabase.list('/Users/').push({ Name: this.Name, Password: this.Password })
             .then((result) => {
-                console.log('remove then', result);
+                // console.log('remove then', result);
                 this.Name = "";
                 this.Password = "";
             })
             .catch((result) => {
-                console.log('remove catch', result);
+                // console.log('remove catch', result);
             });
     }
 
     RemoveUser(Key) {
-        console.log('Key', Key);
+        // console.log('Key', Key);
         if (confirm('確定要刪除嗎?')) {
             this._RealtimeDatabase.object('/Users/' + Key).remove()
                 .then((result) => {
-                    console.log('remove then', result);
+                    // console.log('remove then', result);
                 })
                 .catch((result) => {
-                    console.log('remove catch', result);
+                    // console.log('remove catch', result);
                 });
         }
     }

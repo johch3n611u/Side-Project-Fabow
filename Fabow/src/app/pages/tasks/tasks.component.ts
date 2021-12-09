@@ -27,6 +27,38 @@ export class TasksComponent extends BaseComponent implements OnInit {
     TasksActive = "進行中";
 
     ngOnInit(): void {
+
+        // https://ithelp.ithome.com.tw/articles/10196486
+        // https://cythilya.github.io/2017/07/09/notification/
+
+        let Noti: any = Notification;
+        if ('Notification' in window) {
+            // 如果 window 有支援推播
+            if (Notification.permission === 'default' || Noti.permission === 'undefined') {
+                Notification.requestPermission(res => {
+                    console.log(res);
+                    // permission 可為「granted」（同意）、「denied」（拒絕）和「default」（未授權）
+                    // 在這裡可針對使用者的授權做處理
+                });
+            }
+        }
+
+        console.log('aaa');
+        console.log(Notification.permission);
+        if (Notification.permission === 'default' || Noti.permission === 'undefined') {
+            Notification.requestPermission(res => {
+                console.log(res);
+                // permission 可為「granted」（同意）、「denied」（拒絕）和「default」（未授權）
+                // 在這裡可針對使用者的授權做處理
+            });
+        }
+
+        Notification.requestPermission(res => {
+            console.log(res);
+            // permission 可為「granted」（同意）、「denied」（拒絕）和「default」（未授權）
+            // 在這裡可針對使用者的授權做處理
+        });
+
         this.CheckAdmin();
         this.GetTasks();
     }
@@ -42,12 +74,12 @@ export class TasksComponent extends BaseComponent implements OnInit {
 
             let Collection = this._CloudFirestore.collection('Tasks', ref => ref.orderBy('Date'))
                 .snapshotChanges().pipe(map((actions: DocumentChangeAction<any>[]) => {
-                    console.log('actions', actions);
+                    // console.log('actions', actions);
                     return actions.map(a => {
                         const data = a.payload.doc.data() as any;
                         const id = a.payload.doc.id;
-                        console.log('a', a);
-                        console.log('data', data);
+                        // console.log('a', a);
+                        // console.log('data', data);
                         return { id, ...data };
                     });
                 }));
@@ -55,7 +87,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
             Collection.subscribe(res => {
                 this.DoneTasks = [];
                 this.UndoneTasks = [];
-                console.log('res', res);
+                // console.log('res', res);
                 this.Tasks = res;
                 this.Tasks.forEach(element => {
                     if (element.id == this.RemarkBtnOpenedId) {
@@ -87,7 +119,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
                     this.UndoneTasks = Temp2;
                 }
 
-                console.log('this.Tasks', this.Tasks);
+                // console.log('this.Tasks', this.Tasks);
             });
         }
     }
@@ -97,15 +129,15 @@ export class TasksComponent extends BaseComponent implements OnInit {
 
         this.User = "";
 
-        console.log('this.Name', this.Name);
-        console.log('this.Password', this.Password);
+        // console.log('this.Name', this.Name);
+        // console.log('this.Password', this.Password);
 
         this.Users.forEach(element => {
             if (element.Name == this.Name && element.Password == this.Password) {
                 this.User = this.Name;
             }
         });
-        console.log('this.User', this.User);
+        // console.log('this.User', this.User);
         if (this.User == "") {
             // alert('請確定帳號與密碼，或聯絡管理員');
             this.Email = this.Name;
@@ -122,7 +154,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
 
     CloseTask(id) {
         if (confirm('確定要結案嗎 ? 復原需要調整線上資料庫')) {
-            console.log('CloseTask', id);
+            // console.log('CloseTask', id);
             let Collection = this._CloudFirestore.doc('Tasks/' + id).update({
                 Date: this.GetNowDateString(),
                 IsClosed: true,
@@ -133,7 +165,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
     RemarkBtnOpenedId = "";
     Remark = "";
     TaskAddMessage(Task) {
-        console.log('Task', Task);
+        // console.log('Task', Task);
 
         this.RemarkBtnOpenedId = Task.id;
 

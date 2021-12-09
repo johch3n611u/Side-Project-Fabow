@@ -23,7 +23,7 @@ export class BaseComponent {
     Admin = false;
 
     VerifyLogin() {
-        console.log('document.cookie', document.cookie);
+        // console.log('document.cookie', document.cookie);
         this.DisplayName = this.GetCookie('DisplayName');
         return this.GetCookie('DisplayName');
         // this._AngularFireAuth.authState.subscribe(res => {
@@ -48,7 +48,7 @@ export class BaseComponent {
     Login() {
         return this._AngularFireAuth.signInWithEmailAndPassword(this.Email, this.Password)
             .then((result) => {
-                console.log('result', result);
+                // console.log('result', result);
                 document.cookie = 'DisplayName=' + result.user.displayName;
                 this.Email = "";
                 this.Password = "";
@@ -72,7 +72,7 @@ export class BaseComponent {
         return this._AngularFireAuth.createUserWithEmailAndPassword(this.Email, this.Password)
             .then((result) => {
                 window.alert("成功註冊!!!");
-                console.log(result.user)
+                // console.log(result.user);
                 result.user.updateProfile({ displayName: this.DisplayName });
                 this._Router.navigate(['undone-tasks']);
             }).catch((error) => {
@@ -103,7 +103,7 @@ export class BaseComponent {
         }
         this.GetUsers()
             .subscribe(res => {
-                console.log('GetUsers', res);
+                // console.log('GetUsers', res);
                 this.Users = res;
             });
     }
