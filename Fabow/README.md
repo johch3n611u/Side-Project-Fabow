@@ -29,3 +29,5 @@
 21. `install --save @angular/service-worker`
 22. [ADD PWA](https://www.twblogs.net/a/5d745167bd9eee541c3423d9)
 23. `ng add @angular/pwa`
+24. [FCM](https://nick-chen.medium.com/%E4%BD%BF%E7%94%A8-firebase-%E5%BF%AB%E9%80%9F%E5%BB%BA%E7%AB%8B%E7%B6%B2%E9%A0%81%E6%8E%A8%E6%92%AD%E6%9C%8D%E5%8B%99-web-push-notifications-service-3e7b0d0c5ac6)
+25. 過了一天才發現 [FCM 與 ServiceWork Push Notification 差異](https://www.letswrite.tw/pwa-web-push/)
