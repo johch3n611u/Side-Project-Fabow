@@ -13,6 +13,8 @@ import { TasksComponent } from './pages/tasks/tasks.component';
 import { UsersComponent } from './pages/users/users.component';
 import { EditTaskComponent } from './pages/edit-task/edit-task.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { MessagingService } from './messaging.service';
+import { AsyncPipe } from '@angular/common';
 
 @NgModule({
     declarations: [
@@ -28,13 +30,16 @@ import { ServiceWorkerModule } from '@angular/service-worker';
         AngularFireModule.initializeApp(environment.firebase),
         FormsModule,
         ServiceWorkerModule.register('ngsw-worker.js', {
-          enabled: environment.production,
-          // Register the ServiceWorker as soon as the app is stable
-          // or after 30 seconds (whichever comes first).
-          registrationStrategy: 'registerWhenStable:30000'
+            enabled: environment.production,
+            // Register the ServiceWorker as soon as the app is stable
+            // or after 30 seconds (whichever comes first).
+            registrationStrategy: 'registerWhenStable:30000'
         }),
     ],
-    providers: [],
+    providers: [
+        MessagingService,
+        AsyncPipe,
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -39,6 +39,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
     NotificationInit() {
         // https://ithelp.ithome.com.tw/articles/10196486
         // https://cythilya.github.io/2017/07/09/notification/
+        // https://blog.no2don.com/2018/01/javascript.html
 
         if ('Notification' in window) {
             // 如果 window 有支援推播
@@ -65,23 +66,42 @@ export class TasksComponent extends BaseComponent implements OnInit {
     ServiceWorkInit() {
         let NotifyConfig = {
             body: '\\ ^o^ / 歡迎使用 Fabow !!', // 設定內容
+            onclick: function () {
+                parent.focus();
+                window.focus(); //just in case, older browsers
+                this.close();
+            },
             // icon: '../../../assets/icons/icon-128x128.png', // 設定 icon
         };
 
+        let FirstTime = localStorage.getItem('FirstTime');
         if ('serviceWorker' in navigator) {
             this.ServiceWorkSup = "✔";
             navigator.serviceWorker.ready
                 .then(res => {
                     this.ServiceStatus = "✔";
-                    res.showNotification('Hi 您好!', NotifyConfig);
+                    if (FirstTime != null) {
+                        res.showNotification('Hi 您好!', NotifyConfig).then((notificationEvent: any) => {
+                            localStorage.setItem('FirstTime', 'true');
+                            let notification = notificationEvent.notification;
+                            setTimeout(() => notification.close(), 3000);
+                        });
+                    }
                 });
-
-            if (this.ServiceStatus != "✔") {
-                var notification = new Notification('Hi 您好!', NotifyConfig); // 建立通知
+            if (FirstTime != null) {
+                if (this.ServiceStatus != "✔") {
+                    let notification = new Notification('Hi 您好!', NotifyConfig); // 建立通知
+                    localStorage.setItem('FirstTime', 'true');
+                    setTimeout(notification.close.bind(notification), 3000);
+                }
             }
 
         } else {
-            var notification = new Notification('Hi 您好!', NotifyConfig); // 建立通知
+            if (FirstTime != null) {
+                let notification = new Notification('Hi 您好!', NotifyConfig); // 建立通知
+                localStorage.setItem('FirstTime', 'true');
+                setTimeout(notification.close.bind(notification), 3000);
+            }
         }
     }
 
@@ -94,6 +114,8 @@ export class TasksComponent extends BaseComponent implements OnInit {
 
         console.log('this.Admin', this.Admin);
         console.log('this.User', this.User);
+
+        this.Admin = true;
 
         if (this.User != "" || this.Admin) {
 
