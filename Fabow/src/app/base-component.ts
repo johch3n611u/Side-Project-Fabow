@@ -3,8 +3,8 @@ import { AngularFireDatabase, AngularFireList } from "@angular/fire/database";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { ActivatedRoute, Router } from "@angular/router";
 import { map } from "rxjs/operators";
-import * as moment from 'moment'
-
+import * as moment from 'moment';
+import * as firebase from 'firebase';
 export class BaseComponent {
 
     constructor(
@@ -46,7 +46,6 @@ export class BaseComponent {
                 this.Password = "";
                 this.DisplayName = "";
                 this.Admin = true;
-                // this.GetUsers();
                 this._Router.navigateByUrl('/users');
             }).catch((error) => {
                 // window.alert(error.message);
@@ -92,8 +91,8 @@ export class BaseComponent {
     CheckAdmin() {
 
         this._AngularFireAuth.authState.subscribe(res => {
-            console.log('res', res);
-            if (res != undefined) {
+            console.log('CheckAdmin', res);
+            if (res != undefined && res != null) {
                 this.Admin = true;
                 this.GetUsers()
                     .subscribe(res => {
@@ -125,4 +124,5 @@ export class BaseComponent {
         }
         return key;
     }
+
 }
