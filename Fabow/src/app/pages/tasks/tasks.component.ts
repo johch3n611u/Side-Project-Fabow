@@ -25,15 +25,29 @@ export class TasksComponent extends BaseComponent implements OnInit {
 
     Tasks: any = [];
     TasksActive = "進行中";
-    NotificationStatus = '❌';
     ServiceStatus = '❌';
     ServiceWorkSup = '❌';
+    NotificationStatus = '❌';
     NotificationSup = '❌';
+    RememberMe = false;
+
     ngOnInit(): void {
 
-        this.NotificationInit();
-        this.CheckAdmin();
-        this.GetTasks();
+        this.GetUsers().subscribe(resUser => {
+            this.Users = resUser;
+
+            this.RememberMe = Boolean(localStorage.getItem('RememberMe'));
+            this.Name = localStorage.getItem('Name');
+            this.Password = localStorage.getItem('Password');
+
+            if (this.RememberMe) {
+                this.FakeLogin();
+            }
+
+            this.GetTasks();
+        });
+
+        // this.NotificationInit();
     }
 
     NotificationInit() {
@@ -59,6 +73,8 @@ export class TasksComponent extends BaseComponent implements OnInit {
                         this.ServiceWorkInit();
                     }
                 });
+            } else {
+                this.ServiceWorkInit();
             }
         }
     }
@@ -75,6 +91,10 @@ export class TasksComponent extends BaseComponent implements OnInit {
         };
 
         let FirstTime = localStorage.getItem('FirstTime');
+
+        console.log('FirstTime', FirstTime);
+        console.log('"serviceWorker" in navigator', 'serviceWorker' in navigator);
+
         if ('serviceWorker' in navigator) {
             this.ServiceWorkSup = "✔";
             navigator.serviceWorker.ready
@@ -105,6 +125,10 @@ export class TasksComponent extends BaseComponent implements OnInit {
         }
     }
 
+    NotificationPush() {
+
+    }
+
     Name = "";
     Principal = "";
     DoneTasks = [];
@@ -112,76 +136,105 @@ export class TasksComponent extends BaseComponent implements OnInit {
 
     GetTasks() {
 
-        console.log('this.Admin', this.Admin);
-        console.log('this.User', this.User);
+        this.DoneTasks = [];
+        this.UndoneTasks = [];
 
-        this.Admin = true;
+        let IsUser = (this.User != '' && this.User != undefined && this.User != null);
 
-        if (this.User != "" || this.Admin) {
+        this._AngularFireAuth.authState.subscribe(Auth => {
 
-            let Collection = this._CloudFirestore.collection('Tasks', ref => ref.orderBy('Date'))
-                .snapshotChanges().pipe(map((actions: DocumentChangeAction<any>[]) => {
-                    // console.log('actions', actions);
-                    return actions.map(a => {
-                        const data = a.payload.doc.data() as any;
-                        const id = a.payload.doc.id;
-                        // console.log('a', a);
-                        // console.log('data', data);
-                        return { id, ...data };
+            let IsAdmin = (Auth != undefined && Auth != null);
+            console.log('Auth', Auth);
+
+            if (IsUser || IsAdmin) {
+
+                let Collection = this._CloudFirestore.collection('Tasks', ref => ref.orderBy('Date'))
+                    .snapshotChanges().pipe(map((actions: DocumentChangeAction<any>[]) => {
+                        // console.log('actions', actions);
+                        return actions.map(a => {
+                            const data = a.payload.doc.data() as any;
+                            const id = a.payload.doc.id;
+                            // console.log('a', a);
+                            // console.log('data', data);
+                            return { id, ...data };
+                        });
+                    }));
+
+                Collection.subscribe(resCol => {
+                    this.DoneTasks = [];
+                    this.UndoneTasks = [];
+
+                    console.log('res', resCol);
+
+                    this.Tasks = resCol;
+                    this.Tasks.forEach(element => {
+                        if (element.id == this.RemarkBtnOpenedId) {
+                            element.RemarkBtn = true;
+                        } else {
+                            element.RemarkBtn = false;
+                        }
+                        if (element.IsClosed) {
+                            this.DoneTasks.push(element);
+                        } else {
+                            this.UndoneTasks.push(element);
+                        }
                     });
-                }));
 
-            Collection.subscribe(res => {
-                this.DoneTasks = [];
-                this.UndoneTasks = [];
-                // console.log('res', res);
-                this.Tasks = res;
-                this.Tasks.forEach(element => {
-                    if (element.id == this.RemarkBtnOpenedId) {
-                        element.RemarkBtn = true;
+                    console.log('this.User', this.User);
+                    console.log('type', typeof (this.User));
+
+                    if (IsAdmin) {
+                        // Admin
+                        this.Admin = true;
+
                     } else {
-                        element.RemarkBtn = false;
-                    }
-                    if (element.IsClosed) {
-                        this.DoneTasks.push(element);
-                    } else {
-                        this.UndoneTasks.push(element);
+
+                        //maybe user
+                        let Temp1 = [];
+                        this.DoneTasks.forEach(res => {
+                            if (res.Principal == this.User) {
+                                Temp1.push(res);
+                            }
+                        });
+                        this.DoneTasks = Temp1;
+                        let Temp2 = [];
+                        this.UndoneTasks.forEach(res => {
+                            if (res.Principal == this.User) {
+                                Temp2.push(res);
+                            }
+                        });
+                        this.UndoneTasks = Temp2;
                     }
                 });
+            }
+        });
+    }
 
-                if (!this.Admin) {
-                    let Temp1 = [];
-                    this.DoneTasks.forEach(res => {
-                        if (res.Principal == this.User) {
-                            Temp1.push(res);
-                        }
-                    });
-                    this.DoneTasks = Temp1;
-                    let Temp2 = [];
-                    this.UndoneTasks.forEach(res => {
-                        if (res.Principal == this.User) {
-                            Temp2.push(res);
-                        }
-                    });
-                    this.UndoneTasks = Temp2;
-                }
-
-                // console.log('this.Tasks', this.Tasks);
-            });
-        }
+    FakeLogout() {
+        localStorage.removeItem('RememberMe');
+        localStorage.removeItem('Name');
+        localStorage.removeItem('Password');
+        this.User = '';
+        this.Admin = false;
+        this.RememberMe = false;
+        this.Name = '';
+        this.Password = '';
+        this.Logout();
+        this.GetTasks();
     }
 
     FakeLogin() {
 
         this.User = "";
-
-        // console.log('this.Name', this.Name);
-        // console.log('this.Password', this.Password);
-
         this.Users.forEach(element => {
             if (element.Name == this.Name && element.Password == this.Password) {
                 this.User = this.Name;
                 document.cookie = 'DisplayName=' + this.User;
+                localStorage.setItem('RememberMe', this.RememberMe.toString());
+                if (this.RememberMe) {
+                    localStorage.setItem('Password', this.Password);
+                    localStorage.setItem('Name', this.Name);
+                }
             }
         });
         // console.log('this.User', this.User);

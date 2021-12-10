@@ -54,9 +54,7 @@ export class BaseComponent {
     }
 
     Logout() {
-        this._AngularFireAuth.signOut().then(() => {
-            this._Router.navigate(['tasks']);
-        });
+        this._AngularFireAuth.signOut().then(() => { });
     }
 
     Register() {
@@ -88,20 +86,7 @@ export class BaseComponent {
     }
 
     Users = [];
-    CheckAdmin() {
 
-        this._AngularFireAuth.authState.subscribe(res => {
-            console.log('CheckAdmin', res);
-            if (res != undefined && res != null) {
-                this.Admin = true;
-                this.GetUsers()
-                    .subscribe(res => {
-                        this.Users = res;
-                    });
-            }
-        });
-
-    }
 
     GetNowDateString() {
         return moment(new Date()).format('YYYY-MM-DDTHH:mm:ss.SSS')

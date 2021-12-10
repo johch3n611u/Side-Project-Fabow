@@ -32,7 +32,6 @@ export class EditTaskComponent extends BaseComponent implements OnInit {
     ngOnInit(): void {
 
         this.GetName();
-        this.CheckAdmin();
 
     }
 

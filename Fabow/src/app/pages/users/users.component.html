@@ -4,19 +4,19 @@
         <button type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" [routerLink]="['/tasks']">返回工作項目</button>
         <!-- <button *ngIf="!Admin" type="submit" class="btn btn-secondary Mgbtn col-md-2" (click)="Login()">登入</button> -->
         <a *ngIf="Admin" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" target="_black" href="https://console.firebase.google.com/u/0/">Firebase 管理</a>
-        <span *ngIf="Admin" class="col-xs-12 col-md-2" style="line-height: 37px;">您好 {{DisplayName}} 管理員</span>
+        <span *ngIf="Admin" class="col-xs-12 col-md-2" style="line-height: 37px;">您好 {{DisplayName}}</span>
     </div>
     <div class="col-xs-12">
-        <input class="form-control InputCol Mgbtn col-xs-12 col-md-2" *ngIf="Admin" type="text" placeholder="帳號" id="Name" name="Name" [(ngModel)]="Name">
+        <input class="form-control InputCol Mgbtn col-xs-12 col-md-2" *ngIf="Admin" type="text" placeholder="人員帳號" id="Name" name="Name" [(ngModel)]="Name">
         <!-- <input *ngIf="!Admin" type="text" placeholder="Email" class="form-control InputCol Mgbtn" id="Email"
             name="Email" [(ngModel)]="Email"> -->
-        <input class="form-control InputCol Mgbtn col-xs-12 col-md-2" type="text" placeholder="密碼" id="Password" name="Password" [(ngModel)]="Password">
+        <input class="form-control InputCol Mgbtn col-xs-12 col-md-2" type="text" placeholder="人員密碼" id="Password" name="Password" [(ngModel)]="Password">
         <button *ngIf="Admin" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" (click)="AddUser()">新增負責人員</button>
     </div>
 </div>
 
 <table *ngIf="DisplayName!=''" style="margin-top: 30px;">
-    <thead style="    background-color: #abb3b9;">
+    <thead style="background-color: #abb3b9;">
         <th></th>
         <th>帳號</th>
         <th>密碼</th>

@@ -25,7 +25,19 @@ export class UsersComponent extends BaseComponent implements OnInit {
 
     Users = [];
     ngOnInit(): void {
-        this.CheckAdmin();
+        this._AngularFireAuth.authState.subscribe(auth => {
+            if (auth != undefined && auth != null) {
+                // Admin
+                this.DisplayName = '管理員';
+                this.Admin = true;
+                this.GetUsers()
+                    .subscribe(res => {
+                        this.Users = res;
+                    });
+            } else {
+                this._Router.navigateByUrl('/tasks');
+            }
+        });
     }
 
     Name = "";

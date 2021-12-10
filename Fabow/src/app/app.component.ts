@@ -16,10 +16,10 @@ export class AppComponent {
     constructor(
         public _AngularFireAuth: AngularFireAuth,
         public _Router: Router,
-        public _MessagingService: MessagingService,
+        // public _MessagingService: MessagingService,
     ) {
-        this._MessagingService.RequestPermission();
-        this._MessagingService.ReceiveMessage();
-        this.Msg = this._MessagingService.currentMessage;
+        // this._MessagingService.RequestPermission();
+        // this._MessagingService.ReceiveMessage();
+        // this.Msg = this._MessagingService.currentMessage;
     }
 }

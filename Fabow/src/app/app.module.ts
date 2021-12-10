@@ -37,7 +37,7 @@ import { AsyncPipe } from '@angular/common';
         }),
     ],
     providers: [
-        MessagingService,
+        // MessagingService,
         AsyncPipe,
     ],
     bootstrap: [AppComponent]
