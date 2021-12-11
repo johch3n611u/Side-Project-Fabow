@@ -43,7 +43,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
             this.GetTasks();
         });
         this.NotificationInit();
-        this.MonitorMessage();
     }
     NotificationInit() {
         // https://ithelp.ithome.com.tw/articles/10196486
@@ -187,50 +186,39 @@ export class TasksComponent extends BaseComponent implements OnInit {
                         });
                         this.UndoneTasks = Temp2;
                     }
-                });
-            }
-        });
-    }
-    MonitorMessage() {
-        let Collection = this._CloudFirestore.collection('Tasks', ref => ref.orderBy('Date'))
-            .snapshotChanges().pipe(map((actions: DocumentChangeAction<any>[]) => {
-                return actions.map(a => {
-                    const data = a.payload.doc.data() as any;
-                    const id = a.payload.doc.id;
-                    return { id, ...data };
-                });
-            }));
-        Collection.subscribe(resCol => {
-            console.log('MonitorMessage Work');
-            // 更新通知
-            let batch = this._CloudFirestore.firestore.batch();
-            resCol.forEach(Task => {
-                let Change = false;
-                if (Task.Remarks != undefined && (this.User == Task.Principal || this.Admin)) {
-                    Task.Remarks.forEach(Remark => {
-                        if ((Remark.Principal != Task.Principal) || this.Admin) {
-                            if (Remark.Informed != true) // 未通知
-                            {
-                                Change = true;
-                                let Msg: any = {};
-                                Msg.Title = Remark.Principal;
-                                Msg.body = Remark.Info;
-                                this.Msgs.push(Msg);
-                                Remark.Informed = true;
-                                // https://stackoverflow.com/questions/56814951/
-                                // https://stackoverflow.com/questions/47268241/angularfire2-transactions-and-batch-writes-in-firestore
 
-                                this.NotificationPush(Msg);
-                            }
+                    let batch = this._CloudFirestore.firestore.batch();
+                    resCol.forEach(Task => {
+                        let Change = false;
+                        if (Task.Remarks != undefined && (this.User == Task.Principal || this.Admin)) {
+                            Task.Remarks.forEach(Remark => {
+                                if ((Remark.Principal != Task.Principal) || this.Admin) {
+                                    if (Remark.Informed != true) // 未通知
+                                    {
+                                        Change = true;
+                                        let Msg: any = {};
+                                        Msg.Title = Remark.Principal;
+                                        Msg.body = Remark.Info;
+                                        this.Msgs.push(Msg);
+                                        Remark.Informed = true;
+                                        // https://stackoverflow.com/questions/56814951/
+                                        // https://stackoverflow.com/questions/47268241/angularfire2-transactions-and-batch-writes-in-firestore
+
+                                        this.NotificationPush(Msg);
+                                    }
+                                }
+                            });
+                        }
+                        if (Change) {
+                            console.log('Change');
+                            this._CloudFirestore.doc('Tasks/' + Task.id).update(Task);
                         }
                     });
-                }
-                if (Change) {
-                    this._CloudFirestore.doc('Tasks/' + Task.id).update(Task);
-                }
-            });
-            if (this.Msgs.length != 0) {
-                batch.commit();
+                    if (this.Msgs.length != 0) {
+                        console.log('Batch');
+                        batch.commit();
+                    }
+                });
             }
         });
     }
