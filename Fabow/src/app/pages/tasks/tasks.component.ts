@@ -40,7 +40,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
             if (this.RememberMe) {
                 this.FakeLogin();
             }
-            this.GetTasks();
         });
         this.NotificationInit();
     }
@@ -266,6 +265,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
             this.Email = this.Name;
             this.Login();
         }
+        this.GetTasks();
     }
 
     FilterTasks(Status) {

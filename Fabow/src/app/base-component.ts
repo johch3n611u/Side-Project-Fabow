@@ -47,6 +47,7 @@ export class BaseComponent {
     }
     Logout() {
         this._AngularFireAuth.signOut().then(() => { });
+        this._Router.navigateByUrl('/users');
     }
     Register() {
         return this._AngularFireAuth.createUserWithEmailAndPassword(this.Email, this.Password)
