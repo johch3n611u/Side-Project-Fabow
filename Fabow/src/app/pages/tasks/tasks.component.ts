@@ -40,7 +40,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
             if (this.RememberMe) {
                 this.FakeLogin();
             }
-            this.GetTasks();
         });
         this.NotificationInit();
     }
@@ -253,9 +252,8 @@ export class TasksComponent extends BaseComponent implements OnInit {
             // alert('請確定帳號與密碼，或聯絡管理員');
             this.Email = this.Name;
             this.Login();
-        } else {
-            this.GetTasks();
         }
+        this.GetTasks();
     }
 
     FilterTasks(Status) {
