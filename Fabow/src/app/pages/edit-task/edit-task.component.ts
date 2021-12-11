@@ -49,23 +49,29 @@ export class EditTaskComponent extends BaseComponent implements OnInit {
     }
 
     EditTask() {
-        if (this.Title == '新增') {
-            let Collection = this._CloudFirestore.collection('Tasks').add(
-                {
+
+        if (this.Principal != null && this.Principal != '' && this.Principal != undefined) {
+
+            if (this.Title == '新增') {
+                let Collection = this._CloudFirestore.collection('Tasks').add(
+                    {
+                        Date: this.GetNowDateString(),
+                        IsClosed: false,
+                        Principal: this.Principal,
+                        Task: this.Task,
+                    });
+                this._Router.navigate(['tasks']);
+            } else {
+                let Collection = this._CloudFirestore.doc('Tasks/' + this.Name).update({
                     Date: this.GetNowDateString(),
                     IsClosed: false,
                     Principal: this.Principal,
-                    Task: this.Task,
+                    Task: this.Task
                 });
-            this._Router.navigate(['tasks']);
+                this._Router.navigate(['tasks']);
+            }
         } else {
-            let Collection = this._CloudFirestore.doc('Tasks/' + this.Name).update({
-                Date: this.GetNowDateString(),
-                IsClosed: false,
-                Principal: this.Principal,
-                Task: this.Task
-            });
-            this._Router.navigate(['tasks']);
+            alert('請選擇人員');
         }
     }
 }

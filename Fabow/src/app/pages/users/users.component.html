@@ -1,7 +1,7 @@
 <h2 class="MgTitle">負責人員清單</h2>
 <div class="col-12">
     <div class="col-xs-12">
-        <button type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" [routerLink]="['/tasks']">返回工作項目</button>
+        <button type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" [routerLink]="['/tasks']" [queryParams]="{ Admin:Admin}">返回工作項目</button>
         <!-- <button *ngIf="!Admin" type="submit" class="btn btn-secondary Mgbtn col-md-2" (click)="Login()">登入</button> -->
         <a *ngIf="Admin" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" target="_black" href="https://console.firebase.google.com/u/0/">Firebase 管理</a>
         <span *ngIf="Admin" class="col-xs-12 col-md-2" style="line-height: 37px;">您好 {{DisplayName}}</span>

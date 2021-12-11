@@ -31,20 +31,6 @@ export class BaseComponent {
                 window.alert(error.message)
             });
     }
-    Login() {
-        return this._AngularFireAuth.signInWithEmailAndPassword(this.Email, this.Password)
-            .then((result) => {
-                document.cookie = 'DisplayName=' + result.user.displayName;
-                this.Email = "";
-                this.Password = "";
-                this.DisplayName = "";
-                this.Admin = true;
-                this._Router.navigateByUrl('/users');
-            }).catch((error) => {
-                // window.alert(error.message);
-                window.alert('帳號密碼錯誤，如有問題請詢問管理員');
-            })
-    }
     Logout() {
         this._AngularFireAuth.signOut().then(() => { });
         this._Router.navigateByUrl('/users');

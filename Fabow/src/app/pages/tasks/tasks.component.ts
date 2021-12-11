@@ -268,6 +268,25 @@ export class TasksComponent extends BaseComponent implements OnInit {
         this.GetTasks();
     }
 
+    Login() {
+        return this._AngularFireAuth.signInWithEmailAndPassword(this.Email, this.Password)
+            .then((result) => {
+                document.cookie = 'DisplayName=' + result.user.displayName;
+                localStorage.setItem('RememberMe', this.RememberMe.toString());
+                if (this.RememberMe) {
+                    localStorage.setItem('Password', this.Password);
+                    localStorage.setItem('Name', this.Name);
+                }
+                this.Email = "";
+                this.Password = "";
+                this.DisplayName = "";
+                this.Admin = true;
+            }).catch((error) => {
+                // window.alert(error.message);
+                window.alert('帳號密碼錯誤，如有問題請詢問管理員');
+            })
+    }
+
     FilterTasks(Status) {
         this.TasksActive = Status;
     }
