@@ -42,6 +42,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
             }
         });
         this.NotificationInit();
+        this.CheckMsg();
     }
     NotificationInit() {
         // https://ithelp.ithome.com.tw/articles/10196486
@@ -217,6 +218,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
             let batch = this._CloudFirestore.firestore.batch();
             resCol.forEach(Task => {
                 let Change = false;
+                console.log('this.User == Task.Principal || this.Admin', this.User == Task.Principal || this.Admin)
                 if (Task.Remarks != undefined && (this.User == Task.Principal || this.Admin)) {
                     Task.Remarks.forEach(Remark => {
                         if ((Remark.Principal != Task.Principal) || this.Admin) {
