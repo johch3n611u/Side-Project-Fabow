@@ -75,7 +75,8 @@ export class TasksComponent extends BaseComponent implements OnInit {
             body: '\\ ^o^ / 歡迎使用 Fabow !!', // 設定內容
             onclick: function () {
                 parent.focus();
-                window.focus(); //just in case, older browsers
+                window.focus();
+                window.open('https://johch3n611u.github.io/Side-Project-Fabow/tasks');
                 this.close();
             },
             // icon: '../../../assets/icons/icon-128x128.png', // 設定 icon
@@ -115,13 +116,25 @@ export class TasksComponent extends BaseComponent implements OnInit {
         // ServiceWorkSup = '❌';
         // NotificationStatus = '❌';
         // NotificationSup = '❌';
+
+        let Option = {
+            body: Msg.body,
+            onclick: function () {
+                parent.focus();
+                window.focus();
+                window.open('https://johch3n611u.github.io/Side-Project-Fabow/tasks');
+                this.close();
+            }
+        };
+
         if (this.NotificationSup == "✔") {
             if (this.ServiceWorkSup == "✔") {
                 navigator.serviceWorker.ready.then(Registration => {
-                    Registration.showNotification(Msg.Title, { body: Msg.body })
+                    // https://stackoverflow.com/questions/39418545/chrome-push-notification-how-to-open-url-adress-after-click/39457287
+                    Registration.showNotification(Msg.Title, Option);
                 });
             } else {
-                new Notification(Msg.Title, { body: Msg.body });
+                new Notification(Msg.Title, Option);
             }
         } else {
             alert('\n 請打開通知以接收回報訊息!!\n\n Chrome 請點選 [ 網址列 ] 左側 ⓘ 開啟通知，感謝!!');
