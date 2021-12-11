@@ -34,9 +34,9 @@
             <li>
                 <a (click)="Task.RemarkBtn = !Task.RemarkBtn"> ( 點擊回報 ) <span class="RedW">指派項目</span>：{{Task.Task}}</a>
                 <ul class="list" *ngIf="Task.RemarkBtn" style="padding-left: 0;">
-                    <li *ngFor="let Remark of Task.Remarks" class="d-flex justify-content-around">
-                        <span class="col-xs-12">{{Remark.Principal}}：{{Remark.Info}}</span>
-                        <span class="col-xs-12">{{Remark.Date|date:'[ yyyy-MM-dd ] a hh:mm '}}</span>
+                    <li *ngFor="let Remark of Task.Remarks">
+                        <p>{{Remark.Date|date:'[ yyyy-MM-dd ] a hh:mm '}}</p>
+                        <p>{{Remark.Principal}}：{{Remark.Info}}</p>
                     </li>
                     <hr>
                     <div class="row">
@@ -63,9 +63,9 @@
             <li>
                 <a (click)="Task.RemarkBtn = !Task.RemarkBtn"> ( 點擊回報 ) <span class="RedW">指派項目</span>：{{Task.Task}}</a>
                 <ul class="list" *ngIf="Task.RemarkBtn" style="padding-left: 0;">
-                    <li *ngFor="let Remark of Task.Remarks" class="d-flex justify-content-around">
-                        <span class="col-xs-12">{{Remark.Principal}}：{{Remark.Info}}</span>
-                        <span class="col-xs-12">{{Remark.Date|date:'[ yyyy-MM-dd ] a hh:mm '}}</span>
+                    <li *ngFor="let Remark of Task.Remarks">
+                        <p>{{Remark.Date|date:'[ yyyy-MM-dd ] a hh:mm '}}</p>
+                        <p>{{Remark.Principal}}：{{Remark.Info}}</p>
                     </li>
                 </ul>
             </li>
