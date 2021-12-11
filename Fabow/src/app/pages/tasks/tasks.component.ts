@@ -232,7 +232,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
         this.Name = '';
         this.Password = '';
         this.Logout();
-        this.GetTasks();
     }
 
     FakeLogin() {
