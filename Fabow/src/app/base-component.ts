@@ -4,9 +4,7 @@ import { AngularFirestore } from "@angular/fire/firestore";
 import { ActivatedRoute, Router } from "@angular/router";
 import { map } from "rxjs/operators";
 import * as moment from 'moment';
-import * as firebase from 'firebase';
 export class BaseComponent {
-
     constructor(
         public _AngularFireAuth: AngularFireAuth,
         public _Router: Router,
@@ -16,17 +14,14 @@ export class BaseComponent {
     ) {
 
     }
-
     Email = "";
     Password = "";
     DisplayName = "";
     Admin = false;
     User = "";
-
     ReturnPage() {
         history.go(-1);
     }
-
     SendResetEmail() {
         return this._AngularFireAuth.sendPasswordResetEmail(this.Email)
             .then((result) => {
@@ -36,11 +31,9 @@ export class BaseComponent {
                 window.alert(error.message)
             });
     }
-
     Login() {
         return this._AngularFireAuth.signInWithEmailAndPassword(this.Email, this.Password)
             .then((result) => {
-                // console.log('result', result);
                 document.cookie = 'DisplayName=' + result.user.displayName;
                 this.Email = "";
                 this.Password = "";
@@ -52,29 +45,24 @@ export class BaseComponent {
                 window.alert('帳號密碼錯誤，如有問題請詢問管理員');
             })
     }
-
     Logout() {
         this._AngularFireAuth.signOut().then(() => { });
     }
-
     Register() {
         return this._AngularFireAuth.createUserWithEmailAndPassword(this.Email, this.Password)
             .then((result) => {
                 window.alert("成功註冊!!!");
-                // console.log(result.user);
                 result.user.updateProfile({ displayName: this.DisplayName });
                 this._Router.navigate(['undone-tasks']);
             }).catch((error) => {
                 window.alert(error.message)
             })
     }
-
     GetCookie(name) {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
         if (parts.length === 2) return parts.pop().split(';').shift();
     }
-
     GetUsers() {
         let _Responce: AngularFireList<any> = this._RealtimeDatabase.list('Users');
         return _Responce.snapshotChanges().
@@ -84,14 +72,10 @@ export class BaseComponent {
                 )
             );
     }
-
     Users = [];
-
-
     GetNowDateString() {
         return moment(new Date()).format('YYYY-MM-DDTHH:mm:ss.SSS')
     }
-
     TranslP(key) {
         // 「granted」（同意）、「denied」（拒絕）和「default」（未授權）
         switch (key) {
@@ -109,5 +93,4 @@ export class BaseComponent {
         }
         return key;
     }
-
 }

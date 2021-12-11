@@ -5,6 +5,8 @@ import { BaseComponent } from 'src/app/base-component';
 import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
+// import * as firebase from 'firebase';
+import firebase from '@firebase/app';
 
 @Component({
     selector: 'app-tasks',
@@ -12,7 +14,6 @@ import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
     styleUrls: ['./tasks.component.css']
 })
 export class TasksComponent extends BaseComponent implements OnInit {
-
     constructor(
         public _AngularFireAuth: AngularFireAuth,
         public _Router: Router,
@@ -22,7 +23,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
     ) {
         super(_AngularFireAuth, _Router, _ActivatedRoute, _CloudFirestore, _RealtimeDatabase);
     }
-
     Tasks: any = [];
     TasksActive = "進行中";
     ServiceStatus = '❌';
@@ -30,31 +30,24 @@ export class TasksComponent extends BaseComponent implements OnInit {
     NotificationStatus = '❌';
     NotificationSup = '❌';
     RememberMe = false;
-
     ngOnInit(): void {
-
         this.GetUsers().subscribe(resUser => {
+            console.log('GetUsers Work');
             this.Users = resUser;
-
             this.RememberMe = Boolean(localStorage.getItem('RememberMe'));
             this.Name = localStorage.getItem('Name');
             this.Password = localStorage.getItem('Password');
-
             if (this.RememberMe) {
                 this.FakeLogin();
             }
-
             this.GetTasks();
         });
-
         // this.NotificationInit();
     }
-
     NotificationInit() {
         // https://ithelp.ithome.com.tw/articles/10196486
         // https://cythilya.github.io/2017/07/09/notification/
         // https://blog.no2don.com/2018/01/javascript.html
-
         if ('Notification' in window) {
             // 如果 window 有支援推播
             this.NotificationSup = '✔';
@@ -78,7 +71,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
             }
         }
     }
-
     ServiceWorkInit() {
         let NotifyConfig = {
             body: '\\ ^o^ / 歡迎使用 Fabow !!', // 設定內容
@@ -89,12 +81,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
             },
             // icon: '../../../assets/icons/icon-128x128.png', // 設定 icon
         };
-
         let FirstTime = localStorage.getItem('FirstTime');
-
-        console.log('FirstTime', FirstTime);
-        console.log('"serviceWorker" in navigator', 'serviceWorker' in navigator);
-
         if ('serviceWorker' in navigator) {
             this.ServiceWorkSup = "✔";
             navigator.serviceWorker.ready
@@ -124,48 +111,34 @@ export class TasksComponent extends BaseComponent implements OnInit {
             }
         }
     }
-
     NotificationPush() {
 
     }
-
     Name = "";
     Principal = "";
     DoneTasks = [];
     UndoneTasks = [];
-
+    Pushs = [];
     GetTasks() {
-
         this.DoneTasks = [];
         this.UndoneTasks = [];
-
         let IsUser = (this.User != '' && this.User != undefined && this.User != null);
-
         this._AngularFireAuth.authState.subscribe(Auth => {
-
+            console.log('GetAuth Work');
             let IsAdmin = (Auth != undefined && Auth != null);
-            console.log('Auth', Auth);
-
             if (IsUser || IsAdmin) {
-
                 let Collection = this._CloudFirestore.collection('Tasks', ref => ref.orderBy('Date'))
                     .snapshotChanges().pipe(map((actions: DocumentChangeAction<any>[]) => {
-                        // console.log('actions', actions);
                         return actions.map(a => {
                             const data = a.payload.doc.data() as any;
                             const id = a.payload.doc.id;
-                            // console.log('a', a);
-                            // console.log('data', data);
                             return { id, ...data };
                         });
                     }));
-
                 Collection.subscribe(resCol => {
+                    console.log('GetTasks Work');
                     this.DoneTasks = [];
                     this.UndoneTasks = [];
-
-                    console.log('res', resCol);
-
                     this.Tasks = resCol;
                     this.Tasks.forEach(element => {
                         if (element.id == this.RemarkBtnOpenedId) {
@@ -180,16 +153,9 @@ export class TasksComponent extends BaseComponent implements OnInit {
                         }
                     });
 
-                    console.log('this.User', this.User);
-                    console.log('type', typeof (this.User));
-
                     if (IsAdmin) {
-                        // Admin
                         this.Admin = true;
-
                     } else {
-
-                        //maybe user
                         let Temp1 = [];
                         this.DoneTasks.forEach(res => {
                             if (res.Principal == this.User) {
@@ -205,7 +171,38 @@ export class TasksComponent extends BaseComponent implements OnInit {
                         });
                         this.UndoneTasks = Temp2;
                     }
+
+                    // 更新通知
+                    let batch = this._CloudFirestore.firestore.batch();
+                    this.Tasks.forEach(Task => {
+                        let Change = false;
+                        if (Task.Remarks != undefined && (this.User == Task.Principal || this.Admin)) {
+                            Task.Remarks.forEach(Remark => {
+                                if ((Remark.Principal != Task.Principal) || this.Admin) {
+                                    if (Remark.Informed != true) // 未通知
+                                    {
+                                        Change = true;
+                                        let Temp: any = {};
+                                        Temp.Sender = Remark.Principal;
+                                        Temp.Info = Remark.Info;
+                                        this.Pushs.push(Temp);
+                                        Remark.Informed = true;
+                                        // https://stackoverflow.com/questions/56814951/
+                                        // https://stackoverflow.com/questions/47268241/angularfire2-transactions-and-batch-writes-in-firestore
+                                    }
+                                }
+                            });
+                        }
+                        if (Change) {
+                            this._CloudFirestore.doc('Tasks/' + Task.id).update(Task);
+                        }
+                    });
+                    if (this.Pushs.length != 0) {
+                        batch.commit();
+                    }
                 });
+
+
             }
         });
     }
@@ -224,7 +221,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
     }
 
     FakeLogin() {
-
         this.User = "";
         this.Users.forEach(element => {
             if (element.Name == this.Name && element.Password == this.Password) {
@@ -237,7 +233,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
                 }
             }
         });
-        // console.log('this.User', this.User);
         if (this.User == "") {
             // alert('請確定帳號與密碼，或聯絡管理員');
             this.Email = this.Name;
@@ -245,7 +240,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
         } else {
             this.GetTasks();
         }
-
     }
 
     FilterTasks(Status) {
@@ -254,7 +248,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
 
     CloseTask(id) {
         if (confirm('確定要結案嗎 ? 復原需要調整線上資料庫')) {
-            // console.log('CloseTask', id);
             let Collection = this._CloudFirestore.doc('Tasks/' + id).update({
                 Date: this.GetNowDateString(),
                 IsClosed: true,
@@ -265,22 +258,16 @@ export class TasksComponent extends BaseComponent implements OnInit {
     RemarkBtnOpenedId = "";
     Remark = "";
     TaskAddMessage(Task) {
-        // console.log('Task', Task);
-
         this.RemarkBtnOpenedId = Task.id;
-
         if (Task.Remarks == undefined) {
             Task.Remarks = [];
         }
-
         let Remark: any = {};
-
         Remark.Date = this.GetNowDateString();
         Remark.Principal = this.Principal;
         Remark.Info = this.Remark;
-
+        Remark.Informed = false;
         Task.Remarks.push(Remark);
-
         let Collection = this._CloudFirestore.doc('Tasks/' + Task.id).update({
             Remarks: Task.Remarks,
         }).then(res => {

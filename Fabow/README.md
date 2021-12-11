@@ -31,3 +31,8 @@
 24. [FCM](https://nick-chen.medium.com/%E4%BD%BF%E7%94%A8-firebase-%E5%BF%AB%E9%80%9F%E5%BB%BA%E7%AB%8B%E7%B6%B2%E9%A0%81%E6%8E%A8%E6%92%AD%E6%9C%8D%E5%8B%99-web-push-notifications-service-3e7b0d0c5ac6)
 25. 過了一天才發現 [FCM 與 ServiceWork Push Notification 差異](https://www.letswrite.tw/pwa-web-push/)
 26. 發現要實作資料增加時推播只要利用到 subscribe websocket 機制即可好像不用搞到要主動推播 ...
+27. 如果實作 FCM 主動推播，則要在允許推播時上傳一組此設備的 Token 作為主動推播位置的依據
+28. 而如果利用 webocket realtime database 則是要確定前後數據差異才能主動推播至 Notification
+29. 嘗試先用二種因為目前留言就有 realtime 功能，所需的推播只需要借助回傳的 subscribe 資料就不用再 call 外部 api 避免過多的問題
+30. [研究過後前端三大神獸看起來不能使用都有大小上的限制](https://medium.com/@bebebobohaha/cookie-localstorage-sessionstorage-%E5%B7%AE%E7%95%B0-9e1d5df3dd7f)，決定利用 Firebase 資料來做機制
+31. 增加欄位來判定需不需要通知，通知完後將欄位回寫已通知，代價是增加讀寫一次，相較於 call 外部 api 後續可能出現的問題是較可以接受的
