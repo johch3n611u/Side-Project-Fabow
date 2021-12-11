@@ -40,7 +40,7 @@
                     </li>
                     <hr>
                     <div class="row">
-                        <select class="form-control InputCol Mgbtn" id="Principal" [(ngModel)]="Principal">
+                        <select [disabled]="!Admin" class="form-control InputCol Mgbtn" id="Principal" [(ngModel)]="Principal">
                             <option value="">請選擇</option>
                             <option *ngFor="let User of Users;let i = index;" [value]="User.Name">{{User.Name}}</option>
                         </select>

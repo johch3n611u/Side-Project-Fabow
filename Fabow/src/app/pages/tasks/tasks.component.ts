@@ -171,6 +171,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
                     if (IsAdmin) {
                         this.Admin = true;
                     } else {
+                        this.Principal = this.User;
                         let Temp1 = [];
                         this.DoneTasks.forEach(res => {
                             if (res.Principal == this.User) {
@@ -200,6 +201,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
                 });
             }));
         Collection.subscribe(resCol => {
+            console.log('MonitorMessage Work');
             // 更新通知
             let batch = this._CloudFirestore.firestore.batch();
             resCol.forEach(Task => {
