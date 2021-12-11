@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 // import * as firebase from 'firebase';
 import firebase from '@firebase/app';
+import { compilePipeFromMetadata } from '@angular/compiler';
 
 @Component({
     selector: 'app-tasks',
@@ -251,15 +252,18 @@ export class TasksComponent extends BaseComponent implements OnInit {
     }
 
     FakeLogout() {
-        localStorage.removeItem('RememberMe');
-        localStorage.removeItem('Name');
-        localStorage.removeItem('Password');
-        this.User = '';
-        this.Admin = false;
-        this.RememberMe = false;
-        this.Name = '';
-        this.Password = '';
-        this.Logout();
+
+        if (confirm('確定要登出嗎?')) {
+            localStorage.removeItem('RememberMe');
+            localStorage.removeItem('Name');
+            localStorage.removeItem('Password');
+            this.User = '';
+            this.Admin = false;
+            this.RememberMe = false;
+            this.Name = '';
+            this.Password = '';
+            this.Logout();
+        }
     }
 
     FakeLogin() {
