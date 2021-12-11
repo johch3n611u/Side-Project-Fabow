@@ -42,7 +42,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
             }
             this.GetTasks();
         });
-        // this.NotificationInit();
+        this.NotificationInit();
     }
     NotificationInit() {
         // https://ithelp.ithome.com.tw/articles/10196486
@@ -60,7 +60,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
                     // 在這裡可針對使用者的授權做處理
                     // permission 可為「granted」（同意）、「denied」（拒絕）和「default」（未授權）
                     if (NotiPNot) {
-                        alert('\n 請打開通知以接收最新訊息!!\n\n Chrome 請點選 [ 網址列 ] 左側 ⓘ 開啟通知，感謝!!');
+                        alert('\n 請打開通知以接收回報訊息!!\n\n Chrome 請點選 [ 網址列 ] 左側 ⓘ 開啟通知，感謝!!');
                     } else if (Noti.permission === 'granted') {
                         // 使用者同意授權
                         this.ServiceWorkInit();
@@ -111,14 +111,28 @@ export class TasksComponent extends BaseComponent implements OnInit {
             }
         }
     }
-    NotificationPush() {
-
+    NotificationPush(Msg: any) {
+        // ServiceStatus = '❌';
+        // ServiceWorkSup = '❌';
+        // NotificationStatus = '❌';
+        // NotificationSup = '❌';
+        if (this.NotificationSup == "✔") {
+            if (this.ServiceWorkSup == "✔") {
+                navigator.serviceWorker.ready.then(Registration => {
+                    Registration.showNotification(Msg.Title, { body: Msg.body })
+                });
+            } else {
+                new Notification(Msg.Title, { body: Msg.body });
+            }
+        } else {
+            alert('\n 請打開通知以接收回報訊息!!\n\n Chrome 請點選 [ 網址列 ] 左側 ⓘ 開啟通知，感謝!!');
+        }
     }
     Name = "";
     Principal = "";
     DoneTasks = [];
     UndoneTasks = [];
-    Pushs = [];
+    Msgs = [];
     GetTasks() {
         this.DoneTasks = [];
         this.UndoneTasks = [];
@@ -182,13 +196,15 @@ export class TasksComponent extends BaseComponent implements OnInit {
                                     if (Remark.Informed != true) // 未通知
                                     {
                                         Change = true;
-                                        let Temp: any = {};
-                                        Temp.Sender = Remark.Principal;
-                                        Temp.Info = Remark.Info;
-                                        this.Pushs.push(Temp);
+                                        let Msg: any = {};
+                                        Msg.Title = Remark.Principal;
+                                        Msg.body = Remark.Info;
+                                        this.Msgs.push(Msg);
                                         Remark.Informed = true;
                                         // https://stackoverflow.com/questions/56814951/
                                         // https://stackoverflow.com/questions/47268241/angularfire2-transactions-and-batch-writes-in-firestore
+
+                                        this.NotificationPush(Msg);
                                     }
                                 }
                             });
@@ -197,7 +213,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
                             this._CloudFirestore.doc('Tasks/' + Task.id).update(Task);
                         }
                     });
-                    if (this.Pushs.length != 0) {
+                    if (this.Msgs.length != 0) {
                         batch.commit();
                     }
                 });
