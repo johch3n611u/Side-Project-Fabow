@@ -12,7 +12,6 @@ import { map } from 'rxjs/operators';
     styleUrls: ['./users.component.css']
 })
 export class UsersComponent extends BaseComponent implements OnInit {
-
     constructor(
         public _AngularFireAuth: AngularFireAuth,
         public _Router: Router,
@@ -20,9 +19,8 @@ export class UsersComponent extends BaseComponent implements OnInit {
         public _CloudFirestore: AngularFirestore,
         public _RealtimeDatabase: AngularFireDatabase,
     ) {
-        super(_AngularFireAuth, _Router, _ActivatedRoute, _CloudFirestore, _RealtimeDatabase)
+        super(_AngularFireAuth, _Router, _ActivatedRoute, _CloudFirestore, _RealtimeDatabase);
     }
-
     Users = [];
     ngOnInit(): void {
         this._AngularFireAuth.authState.subscribe(auth => {
@@ -39,31 +37,23 @@ export class UsersComponent extends BaseComponent implements OnInit {
             }
         });
     }
-
     Name = "";
     AddUser(Key) {
         this._RealtimeDatabase.list('/Users/').push({ Name: this.Name, Password: this.Password })
             .then((result) => {
-                // console.log('remove then', result);
                 this.Name = "";
                 this.Password = "";
             })
             .catch((result) => {
-                // console.log('remove catch', result);
             });
     }
-
     RemoveUser(Key) {
-        // console.log('Key', Key);
         if (confirm('確定要刪除嗎?')) {
             this._RealtimeDatabase.object('/Users/' + Key).remove()
                 .then((result) => {
-                    // console.log('remove then', result);
                 })
                 .catch((result) => {
-                    // console.log('remove catch', result);
                 });
         }
     }
-
 }
