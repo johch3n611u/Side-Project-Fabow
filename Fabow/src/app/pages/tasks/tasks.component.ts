@@ -4,10 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BaseComponent } from 'src/app/base-component';
 import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
-import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
-// import * as firebase from 'firebase';
+import { AngularFireDatabase } from '@angular/fire/database';
 import firebase from '@firebase/app';
-import { compilePipeFromMetadata } from '@angular/compiler';
 import { ShardService } from 'src/app/services/shard/shard.service';
 
 @Component({
@@ -33,13 +31,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
             _ShardService,
         );
     }
-    Tasks: any = [];
-    TasksActive = "進行中";
-    ServiceStatus = '❌';
-    ServiceWorkSup = '❌';
-    NotificationStatus = '❌';
-    NotificationSup = '❌';
-    RememberMe = false;
+
     ngOnInit(): void {
         this.GetUsers().subscribe(resUser => {
             console.log('GetUsers Work', resUser);
@@ -53,6 +45,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
         });
         this.NotificationInit();
     }
+
     NotificationInit() {
         // https://ithelp.ithome.com.tw/articles/10196486
         // https://cythilya.github.io/2017/07/09/notification/
@@ -80,6 +73,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
             }
         }
     }
+
     ServiceWorkInit() {
         let NotifyConfig = {
             body: '\\ ^o^ / 歡迎使用 Fabow !!', // 設定內容
@@ -122,8 +116,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
         }
     }
 
-    Name = "";
-    Principal = "";
     DoneTasks = [];
     UndoneTasks = [];
 
@@ -253,8 +245,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
         }
     }
 
-    RemarkBtnOpenedId = "";
-    Remark = "";
     TaskAddMessage(Task) {
         this.RemarkBtnOpenedId = Task.id;
         if (Task.Remarks == undefined) {

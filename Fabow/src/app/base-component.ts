@@ -20,16 +20,15 @@ export class BaseComponent {
 
     }
 
-    Email = "";
-    Password = "";
-    DisplayName = "";
-    Admin = false;
-    User = "";
+    // 返回上一頁
     ReturnPage() {
         history.go(-1);
     }
+
+    // 重新註冊帳號
     SendResetEmail() {
-        return this._AngularFireAuth.sendPasswordResetEmail(this.Email)
+        let Email = '';
+        return this._AngularFireAuth.sendPasswordResetEmail(Email)
             .then((result) => {
                 window.alert("寄送成功請查詢郵件!!!");
                 this._Router.navigate(['users']);
@@ -37,25 +36,37 @@ export class BaseComponent {
                 window.alert(error.message)
             });
     }
+
+    // 登出
     Logout() {
         this._AngularFireAuth.signOut().then(() => { });
         this._Router.navigateByUrl('/users');
     }
+
+    // 註冊 Firebase 授權帳號
     Register() {
-        return this._AngularFireAuth.createUserWithEmailAndPassword(this.Email, this.Password)
+        let Email = '';
+        let Password = '';
+        let DisplayName = '';
+        return this._AngularFireAuth.createUserWithEmailAndPassword(Email, Password)
             .then((result) => {
                 window.alert("成功註冊!!!");
-                result.user.updateProfile({ displayName: this.DisplayName });
+                // 更新顯示名稱
+                result.user.updateProfile({ displayName: DisplayName });
                 this._Router.navigate(['undone-tasks']);
             }).catch((error) => {
                 window.alert(error.message)
             })
     }
-    GetCookie(name) {
+
+    // 取得 Cookie
+    GetCookie(Key) {
         const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
+        const parts = value.split(`; ${Key}=`);
         if (parts.length === 2) return parts.pop().split(';').shift();
     }
+
+    // 取得使用人清單
     GetUsers() {
         let _Responce: AngularFireList<any> = this._RealtimeDatabase.list('Users');
         return _Responce.snapshotChanges().
@@ -65,20 +76,22 @@ export class BaseComponent {
                 )
             );
     }
-    Users = [];
+
+    // 取得現在日期
     GetNowDateString() {
         return moment(new Date()).format('YYYY-MM-DDTHH:mm:ss.SSS')
     }
-    TranslP(key) {
-        // 「granted」（同意）、「denied」（拒絕）和「default」（未授權）
+
+    // 轉換
+    TranslationPermission(key) {
         switch (key) {
-            case 'granted':
+            case 'granted': // 同意
                 key = '✔';
                 break;
-            case 'denied':
+            case 'denied': // 拒絕
                 key = '❌';
                 break;
-            case 'default':
+            case 'default': // 未授權
                 key = '❌';
                 break;
             default:

@@ -30,7 +30,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
             _ShardService,
         );
     }
-    Users = [];
+
     ngOnInit(): void {
         this._AngularFireAuth.authState.subscribe(auth => {
             if (auth != undefined && auth != null) {
@@ -46,7 +46,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
             }
         });
     }
-    Name = "";
+
     AddUser(Key) {
         this._RealtimeDatabase.list('/Users/').push({ Name: this.Name, Password: this.Password })
             .then((result) => {
@@ -56,6 +56,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
             .catch((result) => {
             });
     }
+
     RemoveUser(Key) {
         if (confirm('確定要刪除嗎?')) {
             this._RealtimeDatabase.object('/Users/' + Key).remove()

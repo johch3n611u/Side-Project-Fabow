@@ -36,12 +36,12 @@ export class AppComponent extends BaseComponent {
         // this._MessagingService.RequestPermission();
         // this._MessagingService.ReceiveMessage();
         // this.Msg = this._MessagingService.currentMessage;
-        this.CheckMsg();
+        this.SetNotifications();
     }
 
-    Msgs = [];
-    CheckMsg() {
-
+    // 推播設定
+    SetNotifications() {
+        let Messages = [];
         this._AngularFireAuth.authState.subscribe(Auth => {
             let IsAdmin = (Auth != undefined && Auth != null);
             let Collection = this._CloudFirestore.collection('Tasks', ref => ref.orderBy('Date'))
@@ -54,8 +54,6 @@ export class AppComponent extends BaseComponent {
                 }));
             Collection.subscribe(Tasks => {
                 console.log('CheckMsg Work');
-                console.log('this.Admin', this.Admin);
-                console.log('this.User', this.User);
                 console.log('Tasks', Tasks);
                 let batch = this._CloudFirestore.firestore.batch();
                 Tasks.forEach(Task => {
@@ -107,7 +105,7 @@ export class AppComponent extends BaseComponent {
                     //     this._CloudFirestore.doc('Tasks/' + Task.id).update(Task);
                     // }
                 });
-                if (this.Msgs.length != 0 && !IsAdmin) {
+                if (Messages.length != 0 && !IsAdmin) {
                     console.log('Batch');
                     batch.commit();
                 }
@@ -115,14 +113,10 @@ export class AppComponent extends BaseComponent {
         });
     }
 
-    NotificationPush(Msg: any) {
-        // ServiceStatus = '❌';
-        // ServiceWorkSup = '❌';
-        // NotificationStatus = '❌';
-        // NotificationSup = '❌';
-
+    // 推播
+    PushNotification(Message: any) {
         let Option = {
-            body: Msg.body,
+            body: Message.body,
             onclick: function () {
                 parent.focus();
                 window.focus();
@@ -135,10 +129,10 @@ export class AppComponent extends BaseComponent {
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.ready.then(Registration => {
                     // https://stackoverflow.com/questions/39418545/chrome-push-notification-how-to-open-url-adress-after-click/39457287
-                    Registration.showNotification(Msg.Title, Option);
+                    Registration.showNotification(Message.Title, Option);
                 });
             } else {
-                new Notification(Msg.Title, Option);
+                new Notification(Message.Title, Option);
             }
         } else {
             alert('\n 請打開通知以接收回報訊息!!\n\n Chrome 請點選 [ 網址列 ] 左側 ⓘ 開啟通知，感謝!!');

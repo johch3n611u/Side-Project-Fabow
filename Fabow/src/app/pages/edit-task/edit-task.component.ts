@@ -14,10 +14,7 @@ import { ShardService } from 'src/app/services/shard/shard.service';
 })
 export class EditTaskComponent extends BaseComponent implements OnInit {
     Title = "";
-    Date = this.GetNowDateString();
-    Principal = "";
-    Task = "";
-    Name = "";
+
     constructor(
         public _AngularFireAuth: AngularFireAuth,
         public _Router: Router,
