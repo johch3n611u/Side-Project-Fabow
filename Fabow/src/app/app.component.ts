@@ -43,10 +43,11 @@ export class AppComponent extends BaseComponent {
                         return { id, ...data };
                     });
                 }));
-            Collection.subscribe(resCol => {
+            Collection.subscribe(Tasks => {
                 console.log('CheckMsg Work');
+                console.log('Tasks', Tasks)
                 let batch = this._CloudFirestore.firestore.batch();
-                resCol.forEach(Task => {
+                Tasks.forEach(Task => {
                     let Change = false;
                     console.log('Task', Task);
                     console.log('Task', this.Admin);
