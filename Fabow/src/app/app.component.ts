@@ -45,13 +45,13 @@ export class AppComponent extends BaseComponent {
                 }));
             Collection.subscribe(Tasks => {
                 console.log('CheckMsg Work');
-                console.log('Tasks', Tasks)
+                console.log('this.Admin', this.Admin);
+                console.log('this.User)', this.User);
+                console.log('Tasks', Tasks);
                 let batch = this._CloudFirestore.firestore.batch();
                 Tasks.forEach(Task => {
                     let Change = false;
                     console.log('Task', Task);
-                    console.log('Task', this.Admin);
-                    console.log('Task', this.User);
                     // if (Task.Remarks != undefined) {
                     //     if ((this.User == Task.Principal || this.Admin)) {
                     //         Task.Remarks.forEach(Remark => {
