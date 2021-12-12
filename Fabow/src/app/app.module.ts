@@ -13,8 +13,9 @@ import { TasksComponent } from './pages/tasks/tasks.component';
 import { UsersComponent } from './pages/users/users.component';
 import { EditTaskComponent } from './pages/edit-task/edit-task.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { MessagingService } from './messaging.service';
+// import { MessagingService } from './messaging.service';
 import { AsyncPipe } from '@angular/common';
+import { ShardService } from './services/shard/shard.service';
 
 @NgModule({
     declarations: [
@@ -39,6 +40,7 @@ import { AsyncPipe } from '@angular/common';
     providers: [
         // MessagingService,
         AsyncPipe,
+        ShardService,
     ],
     bootstrap: [AppComponent]
 })

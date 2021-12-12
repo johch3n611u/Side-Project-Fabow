@@ -8,6 +8,7 @@ import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 // import * as firebase from 'firebase';
 import firebase from '@firebase/app';
 import { compilePipeFromMetadata } from '@angular/compiler';
+import { ShardService } from 'src/app/services/shard/shard.service';
 
 @Component({
     selector: 'app-tasks',
@@ -21,8 +22,16 @@ export class TasksComponent extends BaseComponent implements OnInit {
         public _ActivatedRoute: ActivatedRoute,
         public _CloudFirestore: AngularFirestore,
         public _RealtimeDatabase: AngularFireDatabase,
+        public _ShardService: ShardService,
     ) {
-        super(_AngularFireAuth, _Router, _ActivatedRoute, _CloudFirestore, _RealtimeDatabase);
+        super(
+            _AngularFireAuth,
+            _Router,
+            _ActivatedRoute,
+            _CloudFirestore,
+            _RealtimeDatabase,
+            _ShardService,
+        );
     }
     Tasks: any = [];
     TasksActive = "進行中";
@@ -33,7 +42,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
     RememberMe = false;
     ngOnInit(): void {
         this.GetUsers().subscribe(resUser => {
-            console.log('GetUsers Work');
+            console.log('GetUsers Work', resUser);
             this.Users = resUser;
             this.RememberMe = Boolean(localStorage.getItem('RememberMe'));
             this.Name = localStorage.getItem('Name');

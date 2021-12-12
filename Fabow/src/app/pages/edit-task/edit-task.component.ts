@@ -5,6 +5,7 @@ import { BaseComponent } from 'src/app/base-component';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { map } from 'rxjs/operators';
 import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
+import { ShardService } from 'src/app/services/shard/shard.service';
 
 @Component({
     selector: 'app-edit-task',
@@ -23,8 +24,17 @@ export class EditTaskComponent extends BaseComponent implements OnInit {
         public _ActivatedRoute: ActivatedRoute,
         public _RealtimeDatabase: AngularFireDatabase,
         public _CloudFirestore: AngularFirestore,
+        public _ShardService: ShardService,
     ) {
-        super(_AngularFireAuth, _Router, _ActivatedRoute, _CloudFirestore, _RealtimeDatabase);
+        super(
+            _AngularFireAuth,
+            _Router,
+            _ActivatedRoute,
+            _CloudFirestore,
+            _RealtimeDatabase,
+            _ShardService,
+        );
+
         this.GetUsers().subscribe(resUser => {
             this.Users = resUser;
         });

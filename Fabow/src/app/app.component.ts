@@ -6,7 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BaseComponent } from './base-component';
-import { MessagingService } from './messaging.service';
+import { ShardService } from './services/shard/shard.service';
+// import { MessagingService } from './messaging.service';
 
 @Component({
     selector: 'app-root',
@@ -21,9 +22,17 @@ export class AppComponent extends BaseComponent {
         public _ActivatedRoute: ActivatedRoute,
         public _CloudFirestore: AngularFirestore,
         public _RealtimeDatabase: AngularFireDatabase,
+        public _ShardService: ShardService,
         // public _MessagingService: MessagingService,
     ) {
-        super(_AngularFireAuth, _Router, _ActivatedRoute, _CloudFirestore, _RealtimeDatabase);
+        super(
+            _AngularFireAuth,
+            _Router,
+            _ActivatedRoute,
+            _CloudFirestore,
+            _RealtimeDatabase,
+            _ShardService,
+        );
         // this._MessagingService.RequestPermission();
         // this._MessagingService.ReceiveMessage();
         // this.Msg = this._MessagingService.currentMessage;
@@ -46,7 +55,7 @@ export class AppComponent extends BaseComponent {
             Collection.subscribe(Tasks => {
                 console.log('CheckMsg Work');
                 console.log('this.Admin', this.Admin);
-                console.log('this.User)', this.User);
+                console.log('this.User', this.User);
                 console.log('Tasks', Tasks);
                 let batch = this._CloudFirestore.firestore.batch();
                 Tasks.forEach(Task => {

@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BaseComponent } from 'src/app/base-component';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { map } from 'rxjs/operators';
+import { ShardService } from 'src/app/services/shard/shard.service';
 
 @Component({
     selector: 'app-users',
@@ -18,8 +19,16 @@ export class UsersComponent extends BaseComponent implements OnInit {
         public _ActivatedRoute: ActivatedRoute,
         public _CloudFirestore: AngularFirestore,
         public _RealtimeDatabase: AngularFireDatabase,
+        public _ShardService: ShardService,
     ) {
-        super(_AngularFireAuth, _Router, _ActivatedRoute, _CloudFirestore, _RealtimeDatabase);
+        super(
+            _AngularFireAuth,
+            _Router,
+            _ActivatedRoute,
+            _CloudFirestore,
+            _RealtimeDatabase,
+            _ShardService,
+        );
     }
     Users = [];
     ngOnInit(): void {

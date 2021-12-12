@@ -4,16 +4,22 @@ import { AngularFirestore } from "@angular/fire/firestore";
 import { ActivatedRoute, Router } from "@angular/router";
 import { map } from "rxjs/operators";
 import * as moment from 'moment';
+import { ShardService } from "./services/shard/shard.service";
+
+
 export class BaseComponent {
+
     constructor(
         public _AngularFireAuth: AngularFireAuth,
         public _Router: Router,
         public _ActivatedRoute: ActivatedRoute,
         public _CloudFirestore: AngularFirestore,
         public _RealtimeDatabase: AngularFireDatabase,
+        public _ShardService: ShardService,
     ) {
 
     }
+
     Email = "";
     Password = "";
     DisplayName = "";
