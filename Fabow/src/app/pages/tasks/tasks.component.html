@@ -4,30 +4,31 @@
     <span>推播權限:{{TranslationPermission(AppInitInfo.NotificationStatus)}}</span>、
     <span>支援背景運作:{{TranslationPermission(AppInitInfo.ServiceWorkSup)}}</span>、
     <span>背景運作狀態:{{TranslationPermission(AppInitInfo.ServiceStatus)}}</span>、
-    <span>管理員:
-        <span *ngIf="LoginInfo.Admin">✔</span>
-        <span *ngIf="!LoginInfo.Admin">❌</span>
-    </span>
+    <span>管理員:{{TranslationPermission(LoginInfo.Admin)}}</span>
 </p>
-<!-- <span *ngIf="User!=''" class="Mgbtn" style="line-height: 37px;">您好 {{User}}</span>
+<span *ngIf="!LoginInfo.DisplayName" class="Mgbtn" style="line-height: 37px;">
+    您好 {{LoginInfo.DisplayName}}
+</span>
 <div class="col-xs-12" style="padding: 0 16px;">
-    <input *ngIf="!Admin && this.User==''" type="text" placeholder="帳號"
-        class="form-control InputCol Mgbtn col-xs-12 col-md-2" id="Name" name="Name" [(ngModel)]="Name">
-    <input *ngIf="!Admin && this.User==''" type="text" placeholder="密碼"
-        class="form-control InputCol Mgbtn col-xs-12 col-md-2" id="Password" name="Password" [(ngModel)]="Password">
-    <button *ngIf="!Admin && this.User==''" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2"
-        (click)="FakeLogin()">登入</button>
-    <button *ngIf="Admin || this.User!=''" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2"
-        (click)="FakeLogout()">登出</button>
-    <div *ngIf="!Admin && this.User==''" class="form-check Mgbtn" style="display: inline-block;">
+    <input *ngIf="!LoginInfo.Admin && !LoginInfo.DisplayName" type="text" placeholder="帳號"
+        class="form-control InputCol Mgbtn col-xs-12 col-md-2" id="Account" name="Account"
+        [(ngModel)]="LoginInfo.Account">
+    <input *ngIf="!LoginInfo.Admin && !LoginInfo.DisplayName" type="text" placeholder="密碼"
+        class="form-control InputCol Mgbtn col-xs-12 col-md-2" id="Password" name="Password"
+        [(ngModel)]="LoginInfo.Password">
+    <button *ngIf="!LoginInfo.Admin && !LoginInfo.DisplayName" type="submit"
+        class="btn btn-secondary Mgbtn col-xs-12 col-md-2" (click)="FakeLogin()">登入</button>
+    <button *ngIf="LoginInfo.Admin || LoginInfo.DisplayName" type="submit"
+        class="btn btn-secondary Mgbtn col-xs-12 col-md-2" (click)="FakeLogout()">登出</button>
+    <div *ngIf="!LoginInfo.Admin && !LoginInfo.DisplayName" class="form-check Mgbtn" style="display: inline-block;">
         <input class="form-check-input" type="checkbox" [(ngModel)]="RememberMe" id="flexCheckDefault">
         <label class="form-check-label" for="flexCheckDefault">
             記住帳號與密碼
         </label>
     </div>
-    <button *ngIf="Admin" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2"
+    <button *ngIf="LoginInfo.Admin" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2"
         [routerLink]="['/edit-task']">新增指派項目</button>
-    <button *ngIf="Admin" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2"
+    <button *ngIf="LoginInfo.Admin" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2"
         [routerLink]="['/users']">控制台</button>
 </div>
 <hr>
@@ -89,4 +90,4 @@
             </li>
         </ul>
     </li>
-</ol> -->
+</ol>

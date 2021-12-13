@@ -39,16 +39,20 @@ export class TasksComponent extends BaseComponent implements OnInit {
     ngOnInit(): void {
         this._ShardService.SharedUsersInfo.subscribe(res => {
             this.UsersInfo = res;
-            // this.RememberMe = Boolean(localStorage.getItem('RememberMe'));
-            // this.Name = localStorage.getItem('Name');
-            // this.Password = localStorage.getItem('Password');
-            // if (this.RememberMe) {
-            //     this.FakeLogin();
-            // }
+            if (this.LoginInfo.DisplayName == undefined) {
+                this.RememberMe = Boolean(localStorage.getItem('RememberMe'));
+                this.LoginInfo.Account = localStorage.getItem('Account');
+                this.LoginInfo.Password = localStorage.getItem('Password');
+                if (this.RememberMe) {
+                    this.FakeLogin();
+                }
+                console.log('this.LoginInfo', this.LoginInfo);
+            }
         });
-        this._ShardService.SharedAppInitInfo.subscribe(res => { this.AppInitInfo = res; console.log(typeof (res.ServiceStatus)) });
+        this._ShardService.SharedAppInitInfo.subscribe(res => { this.AppInitInfo = res; });
     }
 
+    TasksActive = '進行中';
     DoneTasks = [];
     UndoneTasks = [];
 
@@ -110,6 +114,11 @@ export class TasksComponent extends BaseComponent implements OnInit {
     //     });
     // }
 
+    // 任務狀態切換
+    FilterTasks(Status) {
+        this.TasksActive = Status;
+    }
+
     // FakeLogout() {
 
     //     if (confirm('確定要登出嗎?')) {
@@ -127,15 +136,17 @@ export class TasksComponent extends BaseComponent implements OnInit {
 
     // 負責人登入
     FakeLogin() {
+        console.log('this.UsersInfo', this.UsersInfo);
         this.UsersInfo.forEach(element => {
             if (element.Account == this.LoginInfo.Account && element.Password == this.LoginInfo.Password) {
                 this.LoginInfo.DisplayName = this.LoginInfo.Account;
                 this.KeepLocalStorage();
             }
         });
-        if (this.LoginInfo.DisplayName == "") {
+        if (this.LoginInfo.DisplayName == undefined) {
             this.Login();
         }
+        console.log('this.LoginInfo', this.LoginInfo);
         // this.GetTasks();
     }
 
@@ -155,16 +166,16 @@ export class TasksComponent extends BaseComponent implements OnInit {
     RememberMe = false;
     // 記住本地資料
     KeepLocalStorage() {
+        console.log('KeepLocalStorage');
         localStorage.setItem('RememberMe', this.RememberMe.toString());
         if (this.RememberMe) {
             localStorage.setItem('Name', this.LoginInfo.Account);
             localStorage.setItem('Password', this.LoginInfo.Password);
         }
+        this._ShardService.SetSharedLoginInfo(this.LoginInfo);
     }
 
-    // FilterTasks(Status) {
-    //     this.TasksActive = Status;
-    // }
+
 
     // CloseTask(id) {
     //     if (confirm('確定要結案嗎 ? 復原需要調整線上資料庫')) {

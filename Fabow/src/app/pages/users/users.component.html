@@ -1,22 +1,24 @@
 <h2 class="MgTitle">負責人員清單</h2>
-<div class="col-12">
+<div class="col-12" *ngIf="LoginInfo.Admin">
     <div class="col-xs-12">
         <button type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" [routerLink]="['/tasks']"
-            [queryParams]="{ Admin:LoginInfo.Admin}">返回工作項目</button>
-        <!-- <button *ngIf="!Admin" type="submit" class="btn btn-secondary Mgbtn col-md-2" (click)="Login()">登入</button> -->
-        <a *ngIf="LoginInfo.Admin" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" target="_black"
-            href="https://console.firebase.google.com/u/0/">Firebase 管理</a>
-        <span *ngIf="LoginInfo.Admin" class="col-xs-12 col-md-2" style="line-height: 37px;">您好 {{DisplayName}}</span>
+            [queryParams]="{ Admin:LoginInfo.Admin}">
+            返回工作項目
+        </button>
+        <a class="btn btn-secondary Mgbtn col-xs-12 col-md-2" target="_black"
+            href="https://console.firebase.google.com/u/0/">
+            Firebase 管理
+        </a>
+        <span class="col-xs-12 col-md-2" style="line-height: 37px;">
+            您好 {{LoginInfo.DisplayName}}
+        </span>
     </div>
-    <div class="col-xs-12">
-        <input class="form-control InputCol Mgbtn col-xs-12 col-md-2" *ngIf="LoginInfo.Admin" type="text"
-            placeholder="人員帳號" id="Name" name="Name" [(ngModel)]="User.Account">
-        <!-- <input *ngIf="!Admin" type="text" placeholder="Email" class="form-control InputCol Mgbtn" id="Email"
-            name="Email" [(ngModel)]="Email"> -->
+    <div *ngIf="LoginInfo.Admin" class="col-xs-12">
+        <input class="form-control InputCol Mgbtn col-xs-12 col-md-2" type="text" placeholder="人員帳號" id="Account"
+            name="Account" [(ngModel)]="User.Account">
         <input class="form-control InputCol Mgbtn col-xs-12 col-md-2" type="text" placeholder="人員密碼" id="Password"
             name="Password" [(ngModel)]="User.Password">
-        <button *ngIf="LoginInfo.Admin" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2"
-            (click)="AddUser()">新增負責人員</button>
+        <button type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" (click)="AddUser()">新增負責人員</button>
     </div>
 </div>
 

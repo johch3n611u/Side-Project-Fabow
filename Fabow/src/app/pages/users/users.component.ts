@@ -43,7 +43,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
     User = new UserInfo;
     // 新增負責人員
     AddUser(Key) {
-        this._RealtimeDatabase.list('/Users/').push({ Name: this.User.Account, Password: this.User.Password })
+        this._RealtimeDatabase.list('/Users/').push({ Account: this.User.Account, Password: this.User.Password })
             .then((result) => {
                 this.User.Account = "";
                 this.User.Password = "";
