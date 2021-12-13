@@ -37,7 +37,7 @@ export class BaseComponent {
             });
     }
 
-    // 登出
+    // Firebase 驗證登出
     Logout() {
         this._AngularFireAuth.signOut().then(() => { });
         this._Router.navigateByUrl('/users');
