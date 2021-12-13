@@ -1,17 +1,22 @@
 <h2 class="MgTitle">負責人員清單</h2>
 <div class="col-12">
     <div class="col-xs-12">
-        <button type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" [routerLink]="['/tasks']" [queryParams]="{ Admin:Admin}">返回工作項目</button>
+        <button type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" [routerLink]="['/tasks']"
+            [queryParams]="{ Admin:LoginInfo.Admin}">返回工作項目</button>
         <!-- <button *ngIf="!Admin" type="submit" class="btn btn-secondary Mgbtn col-md-2" (click)="Login()">登入</button> -->
-        <a *ngIf="Admin" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" target="_black" href="https://console.firebase.google.com/u/0/">Firebase 管理</a>
-        <span *ngIf="Admin" class="col-xs-12 col-md-2" style="line-height: 37px;">您好 {{DisplayName}}</span>
+        <a *ngIf="LoginInfo.Admin" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" target="_black"
+            href="https://console.firebase.google.com/u/0/">Firebase 管理</a>
+        <span *ngIf="LoginInfo.Admin" class="col-xs-12 col-md-2" style="line-height: 37px;">您好 {{DisplayName}}</span>
     </div>
     <div class="col-xs-12">
-        <input class="form-control InputCol Mgbtn col-xs-12 col-md-2" *ngIf="Admin" type="text" placeholder="人員帳號" id="Name" name="Name" [(ngModel)]="Name">
+        <input class="form-control InputCol Mgbtn col-xs-12 col-md-2" *ngIf="LoginInfo.Admin" type="text"
+            placeholder="人員帳號" id="Name" name="Name" [(ngModel)]="User.Account">
         <!-- <input *ngIf="!Admin" type="text" placeholder="Email" class="form-control InputCol Mgbtn" id="Email"
             name="Email" [(ngModel)]="Email"> -->
-        <input class="form-control InputCol Mgbtn col-xs-12 col-md-2" type="text" placeholder="人員密碼" id="Password" name="Password" [(ngModel)]="Password">
-        <button *ngIf="Admin" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" (click)="AddUser()">新增負責人員</button>
+        <input class="form-control InputCol Mgbtn col-xs-12 col-md-2" type="text" placeholder="人員密碼" id="Password"
+            name="Password" [(ngModel)]="User.Password">
+        <button *ngIf="LoginInfo.Admin" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2"
+            (click)="AddUser()">新增負責人員</button>
     </div>
 </div>
 
@@ -22,11 +27,11 @@
         <th>密碼</th>
     </thead>
     <tbody>
-        <tr *ngFor="let User of Users;let i = index;">
+        <tr *ngFor="let User of UsersInfo;let i = index;">
             <td>
                 <button type="button" class="btn btn-secondary" (click)="RemoveUser(User.key)">刪除</button>
             </td>
-            <td>{{User.Name}}</td>
+            <td>{{User.Account}}</td>
             <td>{{User.Password}}</td>
         </tr>
     </tbody>

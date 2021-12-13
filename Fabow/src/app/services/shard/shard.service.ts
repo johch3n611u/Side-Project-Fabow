@@ -14,27 +14,24 @@ export class ShardService {
     SharedData = this._BehaviorSubject.asObservable();
 
     SetShareData<T>(Data: T[]) {
-        console.log('Data', Data);
+        // console.log('Data', Data);
         this._BehaviorSubject.next(Data);
-        console.log('SharedData', this.SharedData);
+        // console.log('SharedData', this.SharedData);
     }
 
     private _LoginInfo: LoginInfo = {
-        Email: '',
         Password: '',
         DisplayName: '',
         Admin: false,
-        User: '',
-        Name: '',
-        Principal: ''
+        Account: ''
     };
     private _LoginInfoSubject = new BehaviorSubject(this._LoginInfo);
     SharedLoginInfo = this._LoginInfoSubject.asObservable();
 
     SetSharedLoginInfo<T>(Data: LoginInfo) {
-        console.log('Data', Data);
+        // console.log('Data', Data);
         this._LoginInfoSubject.next(Data);
-        console.log('SharedLoginInfo', this.SharedLoginInfo);
+        // console.log('SharedLoginInfo', this.SharedLoginInfo);
     }
 
     private _UsersInfo: UserInfo[] = [];
@@ -42,23 +39,23 @@ export class ShardService {
     SharedUsersInfo = this._UsersInfoSubject.asObservable();
 
     SetSharedUsersInfo<T>(Datas: UserInfo[]) {
-        console.log('Data', Datas);
+        // console.log('Data', Datas);
         this._UsersInfoSubject.next(Datas);
-        console.log('SharedUsersInfo', this.SharedUsersInfo);
+        // console.log('SharedUsersInfo', this.SharedUsersInfo);
     }
 
     private _AppInitInfo: AppInitInfo = {
-        ServiceStatus: '❌',
-        ServiceWorkSup: '❌',
-        NotificationStatus: '❌',
-        NotificationSup: '❌'
+        ServiceStatus: false,
+        ServiceWorkSup: false,
+        NotificationStatus: false,
+        NotificationSup: false
     };
     private _AppInitInfoSubject = new BehaviorSubject(this._AppInitInfo);
     SharedAppInitInfo = this._AppInitInfoSubject.asObservable();
 
     SetSharedAppInitInfo<T>(Data: AppInitInfo) {
-        console.log('Data', Data);
+        // console.log('Data', Data);
         this._AppInitInfoSubject.next(Data);
-        console.log('SharedAppInitInfo', this.SharedAppInitInfo);
+        // console.log('SharedAppInitInfo', this.SharedAppInitInfo);
     }
 }

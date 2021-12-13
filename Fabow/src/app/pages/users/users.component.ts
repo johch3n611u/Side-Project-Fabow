@@ -6,6 +6,7 @@ import { BaseComponent } from 'src/app/base-component';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { map } from 'rxjs/operators';
 import { ShardService } from 'src/app/services/shard/shard.service';
+import { UserInfo, LoginInfo } from 'src/app/model/shard-model';
 
 @Component({
     selector: 'app-users',
@@ -31,38 +32,35 @@ export class UsersComponent extends BaseComponent implements OnInit {
         );
     }
 
+    LoginInfo = new LoginInfo;
+    UsersInfo: UserInfo[] = [] as UserInfo[];
     ngOnInit(): void {
-        this._AngularFireAuth.authState.subscribe(auth => {
-            if (auth != undefined && auth != null) {
-                // Admin
-                this.DisplayName = '管理員';
-                this.Admin = true;
-                this.GetUsers()
-                    .subscribe(res => {
-                        this.Users = res;
-                    });
-            } else {
-                this._Router.navigateByUrl('/tasks');
-            }
-        });
+        this.FirebaseAuth();
+        this._ShardService.SharedLoginInfo.subscribe(res => { this.LoginInfo = res; });
+        this._ShardService.SharedUsersInfo.subscribe(res => { this.UsersInfo = res; });
     }
 
+    User = new UserInfo;
+    // 新增負責人員
     AddUser(Key) {
-        this._RealtimeDatabase.list('/Users/').push({ Name: this.Name, Password: this.Password })
+        this._RealtimeDatabase.list('/Users/').push({ Name: this.User.Account, Password: this.User.Password })
             .then((result) => {
-                this.Name = "";
-                this.Password = "";
+                this.User.Account = "";
+                this.User.Password = "";
             })
             .catch((result) => {
+                console.log('AddUser', result);
             });
     }
 
+    // 刪除負責人員
     RemoveUser(Key) {
         if (confirm('確定要刪除嗎?')) {
             this._RealtimeDatabase.object('/Users/' + Key).remove()
                 .then((result) => {
                 })
                 .catch((result) => {
+                    console.log('RemoveUser', result);
                 });
         }
     }

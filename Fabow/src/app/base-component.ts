@@ -85,6 +85,15 @@ export class BaseComponent {
     // 轉換
     TranslationPermission(key) {
         switch (key) {
+            case true:
+                key = '✔';
+                break;
+            case false:
+                key = '❌';
+                break;
+            case undefined:
+                key = '❌';
+                break;
             case 'granted': // 同意
                 key = '✔';
                 break;
@@ -98,5 +107,14 @@ export class BaseComponent {
                 break;
         }
         return key;
+    }
+
+    // Firebase 驗證
+    FirebaseAuth() {
+        this._AngularFireAuth.authState.subscribe(auth => {
+            if (auth == undefined || auth == null || auth == undefined) {
+                this._Router.navigateByUrl('/tasks');
+            }
+        });
     }
 }

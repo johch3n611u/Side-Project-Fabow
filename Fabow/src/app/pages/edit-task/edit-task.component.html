@@ -5,12 +5,12 @@
 <hr>
 <div style="padding: 30px;">
     <label for="exampleInputEmail1" class="form-label Mgbtn">編輯日期</label>
-    <p class="Mgbtn">{{Date|date:'[ yyyy-MM-dd ] a hh:mm '}}</p>
+    <p class="Mgbtn">{{Task.Date|date:'[ yyyy-MM-dd ] a hh:mm '}}</p>
     <label for="exampleInputEmail1" class="form-label Mgbtn">負責人員</label>
-    <select class="form-control Mgbtn" id="Principal" [(ngModel)]="Principal">
-    <option value="">請選擇</option>
-    <option *ngFor="let User of Users;let i = index;" [value]="User.Name">{{User.Name}}</option>
-</select>
+    <select class="form-control Mgbtn" id="Principal" [(ngModel)]="Task.Principal">
+        <option value="">請選擇</option>
+        <option *ngFor="let User of UsersInfo;let i = index;" [value]="User.Name">{{User.Name}}</option>
+    </select>
     <label for="exampleInputEmail1" class="form-label Mgbtn">工作項目</label>
     <textarea class="form-control Mgbtn" rows="7" [(ngModel)]="Task"></textarea>
     <br>

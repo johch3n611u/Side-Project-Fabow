@@ -6,6 +6,7 @@ import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { map } from 'rxjs/operators';
 import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
 import { ShardService } from 'src/app/services/shard/shard.service';
+import { LoginInfo, Task, UserInfo } from 'src/app/model/shard-model';
 
 @Component({
     selector: 'app-edit-task',
@@ -31,54 +32,57 @@ export class EditTaskComponent extends BaseComponent implements OnInit {
             _RealtimeDatabase,
             _ShardService,
         );
+    }
 
-        this.GetUsers().subscribe(resUser => {
-            this.Users = resUser;
-        });
-    }
+    LoginInfo = new LoginInfo;
+    UsersInfo: UserInfo[] = [] as UserInfo[];
     ngOnInit(): void {
-        this.GetName();
+        this.FirebaseAuth();
+        this.GetTask();
+        this._ShardService.SharedLoginInfo.subscribe(res => { this.LoginInfo = res; });
+        this._ShardService.SharedUsersInfo.subscribe(res => { this.UsersInfo = res; });
     }
-    GetName() {
+
+    Task = new Task;
+    // 取得任務資料
+    GetTask() {
         this._ActivatedRoute.queryParams.subscribe((queryParams) => {
-            this.Name = queryParams['Name'];
-            if (this.Name == undefined) {
+            let TaskId = queryParams['TaskId'];
+            if (TaskId == undefined) {
                 this.Title = '新增';
             } else {
                 this.Title = '編輯';
-                let Collection = this._CloudFirestore.doc('Tasks/' + this.Name).valueChanges();
-                Collection.subscribe((res: any) => {
-                    this.Principal = res.Principal;
-                    this.Task = res.Task;
-                })
+                let Collection = this._CloudFirestore.doc('Tasks/' + TaskId).valueChanges();
+                Collection.subscribe((res: any) => { this.Task = res; });
             }
         });
     }
 
+    // 新增編輯任務
     EditTask() {
-
-        if (this.Principal != null && this.Principal != '' && this.Principal != undefined) {
+        let Principal = this.Task.Principal;
+        if (Principal != null && Principal != '' && Principal != undefined) {
 
             if (this.Title == '新增') {
                 let Collection = this._CloudFirestore.collection('Tasks').add(
                     {
                         Date: this.GetNowDateString(),
                         IsClosed: false,
-                        Principal: this.Principal,
+                        Principal: this.Task.Principal,
                         Task: this.Task,
                     });
                 this._Router.navigate(['tasks']);
             } else {
-                let Collection = this._CloudFirestore.doc('Tasks/' + this.Name).update({
+                let Collection = this._CloudFirestore.doc('Tasks/' + this.Task.id).update({
                     Date: this.GetNowDateString(),
                     IsClosed: false,
-                    Principal: this.Principal,
+                    Principal: Principal,
                     Task: this.Task
                 });
                 this._Router.navigate(['tasks']);
             }
         } else {
-            alert('請選擇人員');
+            alert('請選擇人員!');
         }
     }
 }
