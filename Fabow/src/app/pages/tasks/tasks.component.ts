@@ -49,9 +49,47 @@ export class TasksComponent extends BaseComponent implements OnInit {
             }
         });
         this._ShardService.SharedAppInitInfo.subscribe(res => { this.AppInitInfo = res; });
-        this._ShardService.SharedLoginInfo.subscribe(res => { this.LoginInfo = res; this.GetTasks(); });
+        this._ShardService.SharedLoginInfo.subscribe(res => {
+            this.LoginInfo = res;
+            this.GetTasks();
+            this.TempRemark.Principal = this.LoginInfo.Account;
+        });
+        this._ShardService.SharedTasks.subscribe(Tasks => {
+            this.DoneTasks = [];
+            this.UndoneTasks = [];
+            Tasks.forEach((element: any) => {
+                if (element.id == this.RemarkBtnOpenedId) {
+                    element.RemarkBtn = true;
+                } else {
+                    element.RemarkBtn = false;
+                }
+                if (element.IsClosed) {
+                    this.DoneTasks.push(element);
+                } else {
+                    this.UndoneTasks.push(element);
+                }
+            });
+
+            if (!this.LoginInfo.Admin) {
+                let Temp1 = [];
+                this.DoneTasks.forEach(res => {
+                    if (res.Principal == this.LoginInfo.DisplayName) {
+                        Temp1.push(res);
+                    }
+                });
+                this.DoneTasks = Temp1;
+                let Temp2 = [];
+                this.UndoneTasks.forEach(res => {
+                    if (res.Principal == this.LoginInfo.DisplayName) {
+                        Temp2.push(res);
+                    }
+                });
+                this.UndoneTasks = Temp2;
+            }
+        });
     }
 
+    TeskTasks = [];
     TasksActive = '進行中';
     DoneTasks = [];
     UndoneTasks = [];
@@ -70,39 +108,9 @@ export class TasksComponent extends BaseComponent implements OnInit {
                             return { id, ...data };
                         });
                     }));
-                Collection.subscribe(Task => {
+                Collection.subscribe(Tasks => {
                     console.log('GetTasks Work');
-                    this.DoneTasks = [];
-                    this.UndoneTasks = [];
-                    Task.forEach(element => {
-                        if (element.id == this.RemarkBtnOpenedId) {
-                            element.RemarkBtn = true;
-                        } else {
-                            element.RemarkBtn = false;
-                        }
-                        if (element.IsClosed) {
-                            this.DoneTasks.push(element);
-                        } else {
-                            this.UndoneTasks.push(element);
-                        }
-                    });
-
-                    if (!this.LoginInfo.Admin) {
-                        let Temp1 = [];
-                        this.DoneTasks.forEach(res => {
-                            if (res.Principal == this.LoginInfo.DisplayName) {
-                                Temp1.push(res);
-                            }
-                        });
-                        this.DoneTasks = Temp1;
-                        let Temp2 = [];
-                        this.UndoneTasks.forEach(res => {
-                            if (res.Principal == this.LoginInfo.DisplayName) {
-                                Temp2.push(res);
-                            }
-                        });
-                        this.UndoneTasks = Temp2;
-                    }
+                    this._ShardService.SetShareTasks(Tasks);
                 });
             }
         });
@@ -133,7 +141,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
         if (this.LoginInfo.DisplayName == '') {
             this.Login();
         }
-        console.log('this.LoginInfo', this.LoginInfo);
+        // console.log('this.LoginInfo', this.LoginInfo);
     }
 
     // Firebase 登入
@@ -193,7 +201,5 @@ export class TasksComponent extends BaseComponent implements OnInit {
         });
     }
 
-    test() {
-        console.log('this.LoginInfo', this.LoginInfo);
-    }
+    HoverClass = 'MouseOut';
 }

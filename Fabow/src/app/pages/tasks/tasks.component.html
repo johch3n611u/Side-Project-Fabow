@@ -1,4 +1,3 @@
-<!-- <button (click)="test()">test</button> -->
 <h2 class="MgTitle" style="display: inline-block;">指派項目</h2>
 <p class="Mgbtn" style="display: inline-block;">
     <span>支援推播:{{TranslationPermission(AppInitInfo.NotificationSup)}}</span>、
@@ -11,8 +10,8 @@
     您好 {{LoginInfo.DisplayName}}
 </span>
 <div class="col-xs-12" style="padding: 0 16px;">
-    <input *ngIf="!LoginInfo.Admin && !LoginInfo.DisplayName" type="text" placeholder="帳號" class="form-control InputCol Mgbtn col-xs-12 col-md-2" id="Account" name="Account" [(ngModel)]="LoginInfo.Account">
-    <input *ngIf="!LoginInfo.Admin && !LoginInfo.DisplayName" type="text" placeholder="密碼" class="form-control InputCol Mgbtn col-xs-12 col-md-2" id="Password" name="Password" [(ngModel)]="LoginInfo.Password">
+    <input *ngIf="!LoginInfo.Admin && !LoginInfo.DisplayName" type="text" placeholder="帳號" class="form-control InputCol Mgbtn col-xs-12 col-md-2" id="Account" name="Account" [(ngModel)]="LoginInfo.Account" (mouseenter)="HoverClass = 'MouseIn'" (mouseleave)="HoverClass = 'MouseOut'">
+    <input *ngIf="!LoginInfo.Admin && !LoginInfo.DisplayName" type="text" placeholder="密碼" class="form-control InputCol Mgbtn col-xs-12 col-md-2" id="Password" name="Password" [(ngModel)]="LoginInfo.Password" (mouseenter)="HoverClass = 'MouseIn'" (mouseleave)="HoverClass = 'MouseOut'">
     <button *ngIf="!LoginInfo.Admin && !LoginInfo.DisplayName" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" (click)="FakeLogin()">登入</button>
     <button *ngIf="LoginInfo.Admin || LoginInfo.DisplayName" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" (click)="FakeLogout()">登出</button>
     <div *ngIf="!LoginInfo.Admin && !LoginInfo.DisplayName" class="form-check Mgbtn" style="display: inline-block;">
@@ -21,8 +20,12 @@
             記住帳號與密碼
         </label>
     </div>
+    <!-- https://stackoverflow.com/questions/37686772/angular-2-hover-event -->
     <button *ngIf="LoginInfo.Admin" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" [routerLink]="['/edit-task']">新增指派項目</button>
     <button *ngIf="LoginInfo.Admin" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" [routerLink]="['/users']">控制台</button>
+    <div [class]="'Mgbtn '+ HoverClass">
+        清除 Chorme 自動輸入 => 「Shift」+「Delete」(Windows)、「Shift 」+「Fn」 +「Del」(Mac)
+    </div>
 </div>
 <hr>
 <div style="display:flex;line-height: 50px;">
@@ -49,9 +52,11 @@
                     </li>
                     <hr>
                     <div class="row">
-                        <select [disabled]="!Admin" class="form-control InputCol Mgbtn" id="Principal" [(ngModel)]="TempRemark.Principal">
+                        <select [disabled]="!LoginInfo.Admin" class="form-control InputCol Mgbtn" id="Principal" [(ngModel)]="TempRemark.Principal">
                             <option value="">請選擇</option>
-                            <option *ngFor="let User of Users;let i = index;" [value]="User.Account">{{User.Account}}</option>
+                            <option *ngFor="let User of UsersInfo;let i = index;" [value]="User.Account">
+                                {{User.Account}}
+                            </option>
                         </select>
                         <input placeholder="e.g. 已完成" type="text" class="form-control Mgbtn InputCol" id="Remark" name="Remark" [(ngModel)]="TempRemark.Info">
                         <button class="btn btn-secondary Mgbtn" (click)="TaskAddMessage(Task)">回報</button>
