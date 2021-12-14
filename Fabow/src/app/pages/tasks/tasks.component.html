@@ -26,12 +26,14 @@
             記住帳號與密碼
         </label>
     </div>
-    <div [class]="'Mgbtn '+ HoverClass">清除 Chorme 自動輸入 => 「Shift」+「Delete」(Windows)、「Shift 」+「Fn」 +「Del」(Mac)</div>
     <!-- https://stackoverflow.com/questions/37686772/angular-2-hover-event -->
     <button *ngIf="LoginInfo.Admin" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2"
         [routerLink]="['/edit-task']">新增指派項目</button>
     <button *ngIf="LoginInfo.Admin" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2"
         [routerLink]="['/users']">控制台</button>
+    <div [class]="'Mgbtn '+ HoverClass">
+        清除 Chorme 自動輸入 => 「Shift」+「Delete」(Windows)、「Shift 」+「Fn」 +「Del」(Mac)
+    </div>
 </div>
 <hr>
 <div style="display:flex;line-height: 50px;">
