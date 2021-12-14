@@ -6,7 +6,7 @@
     <span>背景運作狀態:{{TranslationPermission(AppInitInfo.ServiceStatus)}}</span>、
     <span>管理員:{{TranslationPermission(LoginInfo.Admin)}}</span>
 </p>
-<span *ngIf="!LoginInfo.DisplayName" class="Mgbtn" style="line-height: 37px;">
+<span *ngIf="LoginInfo.DisplayName" class="Mgbtn" style="line-height: 37px;">
     您好 {{LoginInfo.DisplayName}}
 </span>
 <div class="col-xs-12" style="padding: 0 16px;">

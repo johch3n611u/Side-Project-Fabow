@@ -37,56 +37,20 @@ export class TasksComponent extends BaseComponent implements OnInit {
     LoginInfo = new LoginInfo;
     AppInitInfo = new AppInitInfo;
     ngOnInit(): void {
-        this._ShardService.SharedUsersInfo.subscribe(res => {
-            this.UsersInfo = res;
-            if (this.LoginInfo.DisplayName == '') {
-                this.RememberMe = Boolean(localStorage.getItem('RememberMe'));
-                this.LoginInfo.Account = localStorage.getItem('Account');
-                this.LoginInfo.Password = localStorage.getItem('Password');
-                if (this.RememberMe) {
-                    this.FakeLogin();
-                }
-            }
-        });
-        this._ShardService.SharedAppInitInfo.subscribe(res => { this.AppInitInfo = res; });
-        this._ShardService.SharedLoginInfo.subscribe(res => {
-            this.LoginInfo = res;
-            this.GetTasks();
-            this.TempRemark.Principal = this.LoginInfo.Account;
-        });
-        this._ShardService.SharedTasks.subscribe(Tasks => {
-            this.DoneTasks = [];
-            this.UndoneTasks = [];
-            Tasks.forEach((element: any) => {
-                if (element.id == this.RemarkBtnOpenedId) {
-                    element.RemarkBtn = true;
-                } else {
-                    element.RemarkBtn = false;
-                }
-                if (element.IsClosed) {
-                    this.DoneTasks.push(element);
-                } else {
-                    this.UndoneTasks.push(element);
-                }
-            });
 
-            if (!this.LoginInfo.Admin) {
-                let Temp1 = [];
-                this.DoneTasks.forEach(res => {
-                    if (res.Principal == this.LoginInfo.DisplayName) {
-                        Temp1.push(res);
-                    }
-                });
-                this.DoneTasks = Temp1;
-                let Temp2 = [];
-                this.UndoneTasks.forEach(res => {
-                    if (res.Principal == this.LoginInfo.DisplayName) {
-                        Temp2.push(res);
-                    }
-                });
-                this.UndoneTasks = Temp2;
-            }
+        this.RememberMe = Boolean(localStorage.getItem('RememberMe'));
+        if (this.RememberMe) {
+            this.LoginInfo.Account = localStorage.getItem('Account');
+            this.LoginInfo.Password = localStorage.getItem('Password');
+        }
+
+        this.GetUsers().subscribe(res => {
+            this._ShardService.SetSharedUsersInfo(res);
+            this.UsersInfo = res;
         });
+
+        this._ShardService.SharedAppInitInfo.subscribe(res => { this.AppInitInfo = res; });
+        this._ShardService.SharedLoginInfo.subscribe(res => { this.LoginInfo = res; });
     }
 
     TeskTasks = [];
@@ -111,6 +75,36 @@ export class TasksComponent extends BaseComponent implements OnInit {
                 Collection.subscribe(Tasks => {
                     console.log('GetTasks Work');
                     this._ShardService.SetShareTasks(Tasks);
+                    this.DoneTasks = [];
+                    this.UndoneTasks = [];
+                    Tasks.forEach((element: any) => {
+                        if (element.id == this.RemarkBtnOpenedId) {
+                            element.RemarkBtn = true;
+                        } else {
+                            element.RemarkBtn = false;
+                        }
+                        if (element.IsClosed) {
+                            this.DoneTasks.push(element);
+                        } else {
+                            this.UndoneTasks.push(element);
+                        }
+                    });
+                    if (!this.LoginInfo.Admin) {
+                        let Temp1 = [];
+                        this.DoneTasks.forEach(res => {
+                            if (res.Principal == this.LoginInfo.DisplayName) {
+                                Temp1.push(res);
+                            }
+                        });
+                        this.DoneTasks = Temp1;
+                        let Temp2 = [];
+                        this.UndoneTasks.forEach(res => {
+                            if (res.Principal == this.LoginInfo.DisplayName) {
+                                Temp2.push(res);
+                            }
+                        });
+                        this.UndoneTasks = Temp2;
+                    }
                 });
             }
         });
@@ -126,6 +120,8 @@ export class TasksComponent extends BaseComponent implements OnInit {
         if (confirm('確定要登出嗎?')) {
             localStorage.clear();
             this.RememberMe = false;
+            let obj = new LoginInfo;
+            this._ShardService.SetSharedLoginInfo(obj);
             this.Logout();
         }
     }
@@ -135,17 +131,18 @@ export class TasksComponent extends BaseComponent implements OnInit {
         this.UsersInfo.forEach(element => {
             if (element.Account == this.LoginInfo.Account && element.Password == this.LoginInfo.Password) {
                 this.LoginInfo.DisplayName = this.LoginInfo.Account;
+                this.TempRemark.Principal = this.LoginInfo.Account;
                 this.KeepLocalStorage();
             }
         });
-        if (this.LoginInfo.DisplayName == '') {
+        if (!this.LoginInfo.DisplayName) {
             this.Login();
         }
-        // console.log('this.LoginInfo', this.LoginInfo);
     }
 
     // Firebase 登入
     Login() {
+        console.log('this.LoginInfo', this.LoginInfo);
         return this._AngularFireAuth.signInWithEmailAndPassword(this.LoginInfo.Account, this.LoginInfo.Password)
             .then((result) => {
                 this.LoginInfo.DisplayName = '管理員';

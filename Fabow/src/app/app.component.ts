@@ -1,4 +1,4 @@
-import { AppInitInfo } from 'src/app/model/shard-model';
+import { AppInitInfo, Task } from 'src/app/model/shard-model';
 import { Component } from '@angular/core';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFireDatabase } from '@angular/fire/database';
@@ -40,85 +40,73 @@ export class AppComponent extends BaseComponent {
         // this._MessagingService.RequestPermission();
         // this._MessagingService.ReceiveMessage();
         // this.Msg = this._MessagingService.currentMessage;
-        this.GetUsers().subscribe(res => this._ShardService.SetSharedUsersInfo(res));
+        // this.NotificationInit();
+        // this.SetNotifications();
         this._ShardService.SharedLoginInfo.subscribe(res => { this.LoginInfo = res; });
-        this.NotificationInit();
-        this.SetNotifications();
     }
 
     // 推播設定
     SetNotifications() {
+        console.log('SetNotifications Work');
         let Messages = [];
-        this._AngularFireAuth.authState.subscribe(Auth => {
-            let IsAdmin = (Auth != undefined && Auth != null);
-            let Collection = this._CloudFirestore.collection('Tasks', ref => ref.orderBy('Date'))
-                .snapshotChanges().pipe(map((actions: DocumentChangeAction<any>[]) => {
-                    return actions.map(a => {
-                        const data = a.payload.doc.data() as any;
-                        const id = a.payload.doc.id;
-                        return { id, ...data };
-                    });
-                }));
-            Collection.subscribe(Tasks => {
-                console.log('CheckMsg Work');
-                // console.log('Tasks', Tasks);
-                let batch = this._CloudFirestore.firestore.batch();
-                Tasks.forEach(Task => {
-                    let Change = false;
-                    // console.log('Task', Task);
-                    if (Task.Remarks != undefined) {
-                        if ((this.LoginInfo.Account == Task.Principal || this.LoginInfo.Admin)) {
-                            Task.Remarks.forEach(Remark => {
-                                if ((Remark.Principal != Task.Principal)) {
+        this._ShardService.SharedTasks.subscribe(Tasks => {
+            console.log('CheckMsg');
+            let batch = this._CloudFirestore.firestore.batch();
+            Tasks.forEach(Task => {
+                let Change = false;
+                // console.log('Task', Task);
+                if (Task.Remarks != undefined) {
+                    if ((this.LoginInfo.Account == Task.Principal || this.LoginInfo.Admin)) {
+                        Task.Remarks.forEach(Remark => {
+                            if ((Remark.Principal != Task.Principal)) {
 
-                                    // https://stackoverflow.com/questions/56814951/
-                                    // https://stackoverflow.com/questions/47268241/angularfire2-transactions-and-batch-writes-in-firestore
+                                // https://stackoverflow.com/questions/56814951/
+                                // https://stackoverflow.com/questions/47268241/angularfire2-transactions-and-batch-writes-in-firestore
 
-                                    if (Remark.Informed != true) // 未通知
-                                    {
-                                        // 給使用者的推播
-                                        console.log('給使用者的推播');
-                                        // console.log('this.LoginInfo.Account', this.LoginInfo.Account);
-                                        // console.log('Task.Principal', Task.Principal);
-                                        // console.log('Remark.Principal', Remark.Principal);
-                                        Change = true;
-                                        let Msg: any = {};
-                                        Msg.Title = Remark.Principal;
-                                        Msg.body = Remark.Info;
-                                        Remark.Informed = true;
+                                if (Remark.Informed != true) // 未通知
+                                {
+                                    // 給使用者的推播
+                                    console.log('給使用者的推播');
+                                    // console.log('this.LoginInfo.Account', this.LoginInfo.Account);
+                                    // console.log('Task.Principal', Task.Principal);
+                                    // console.log('Remark.Principal', Remark.Principal);
+                                    Change = true;
+                                    let Msg: any = {};
+                                    Msg.Title = Remark.Principal;
+                                    Msg.body = Remark.Info;
+                                    Remark.Informed = true;
 
-                                        this.PushNotification(Msg);
-                                    }
-                                } else if (this.LoginInfo.Admin) {
-                                    if (Remark.Informed != true) // 未通知
-                                    {
-                                        // 給管理員的推播
-                                        console.log('給管理員的推播');
-                                        // console.log('this.LoginInfo.Account', this.LoginInfo.Account);
-                                        // console.log('Task.Principal', Task.Principal);
-                                        // console.log('Remark.Principal', Remark.Principal);
-                                        Change = true;
-                                        let Msg: any = {};
-                                        Msg.Title = Remark.Principal;
-                                        Msg.body = Remark.Info;
-                                        Remark.Informed = true;
-
-                                        this.PushNotification(Msg);
-                                    }
+                                    this.PushNotification(Msg);
                                 }
-                            });
-                        }
+                            } else if (this.LoginInfo.Admin) {
+                                if (Remark.Informed != true) // 未通知
+                                {
+                                    // 給管理員的推播
+                                    console.log('給管理員的推播');
+                                    // console.log('this.LoginInfo.Account', this.LoginInfo.Account);
+                                    // console.log('Task.Principal', Task.Principal);
+                                    // console.log('Remark.Principal', Remark.Principal);
+                                    Change = true;
+                                    let Msg: any = {};
+                                    Msg.Title = Remark.Principal;
+                                    Msg.body = Remark.Info;
+                                    Remark.Informed = true;
+
+                                    this.PushNotification(Msg);
+                                }
+                            }
+                        });
                     }
-                    if (Change) {
-                        console.log('Change');
-                        this._CloudFirestore.doc('Tasks/' + Task.id).update(Task);
-                    }
-                });
-                if (Messages.length != 0 && !IsAdmin) {
-                    console.log('Batch');
-                    batch.commit();
+                }
+                if (Change) {
+                    console.log('Change');
+                    this._CloudFirestore.doc('Tasks/' + Task.id).update(Task);
                 }
             });
+            if (Messages.length != 0 && !this.LoginInfo.Admin) {
+                console.log('Batch');
+                batch.commit();
+            }
         });
     }
 
