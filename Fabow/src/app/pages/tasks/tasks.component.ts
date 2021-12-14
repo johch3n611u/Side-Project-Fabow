@@ -70,11 +70,12 @@ export class TasksComponent extends BaseComponent implements OnInit {
                             return { id, ...data };
                         });
                     }));
-                Collection.subscribe(Task => {
+                Collection.subscribe(Tasks => {
                     console.log('GetTasks Work');
+                    this._ShardService.SetShareTasks(Tasks);
                     this.DoneTasks = [];
                     this.UndoneTasks = [];
-                    Task.forEach(element => {
+                    Tasks.forEach(element => {
                         if (element.id == this.RemarkBtnOpenedId) {
                             element.RemarkBtn = true;
                         } else {
@@ -193,7 +194,5 @@ export class TasksComponent extends BaseComponent implements OnInit {
         });
     }
 
-    test() {
-        console.log('this.LoginInfo', this.LoginInfo);
-    }
+    HoverClass = 'MouseOut';
 }

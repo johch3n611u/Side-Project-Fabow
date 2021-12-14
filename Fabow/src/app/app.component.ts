@@ -41,6 +41,7 @@ export class AppComponent extends BaseComponent {
         this.GetUsers().subscribe(res => this._ShardService.SetSharedUsersInfo(res));
         this.NotificationInit();
         // this.SetNotifications();
+        this._ShardService.SharedTasks.subscribe(res => console.log('SharedTasks', res));
     }
 
     // 推播設定
