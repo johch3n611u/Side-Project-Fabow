@@ -35,8 +35,8 @@
     <li class="card" *ngFor="let Task of UndoneTasks;let i = index;">
         <ul>
             <li>
-                <button *ngIf="Admin" class="btn btn-secondary" (click)="CloseTask(Task.id)">結案</button>
-                <button *ngIf="Admin" class="btn btn-secondary Mgbtn" [routerLink]="['/edit-task']" [queryParams]="{ TaskId: Task.id }">編輯</button>
+                <button *ngIf="LoginInfo.Admin" class="btn btn-secondary" (click)="CloseTask(Task.id)">結案</button>
+                <button *ngIf="LoginInfo.Admin" class="btn btn-secondary Mgbtn" [routerLink]="['/edit-task']" [queryParams]="{ TaskId: Task.id }">編輯</button>
                 <p><span class="RedW">編輯時間</span>：{{Task.Date|date:'[ yyyy-MM-dd ] a hh:mm '}}</p>
                 <p><span class="RedW">負責人</span>：{{Task.Principal}}</p>
             </li>
