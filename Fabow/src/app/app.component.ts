@@ -17,7 +17,9 @@ import { ShardService } from './services/shard/shard.service';
     styleUrls: ['./app.component.css']
 })
 export class AppComponent extends BaseComponent {
-    Msg: BehaviorSubject<any>;
+
+    LoginInfo = new LoginInfo;
+
     constructor(
         public _AngularFireAuth: AngularFireAuth,
         public _Router: Router,
@@ -39,9 +41,9 @@ export class AppComponent extends BaseComponent {
         // this._MessagingService.ReceiveMessage();
         // this.Msg = this._MessagingService.currentMessage;
         this.GetUsers().subscribe(res => this._ShardService.SetSharedUsersInfo(res));
+        this._ShardService.SharedLoginInfo.subscribe(res => { this.LoginInfo = res; });
         this.NotificationInit();
-        // this.SetNotifications();
-        this._ShardService.SharedTasks.subscribe(res => console.log('SharedTasks', res));
+        this.SetNotifications();
     }
 
     // 推播設定
@@ -64,51 +66,53 @@ export class AppComponent extends BaseComponent {
                 Tasks.forEach(Task => {
                     let Change = false;
                     // console.log('Task', Task);
-                    // if (Task.Remarks != undefined) {
-                    //     if ((this.User == Task.Principal || this.Admin)) {
-                    //         Task.Remarks.forEach(Remark => {
-                    //             if ((Remark.Principal != Task.Principal) && this.Admin) {
-                    //                 if (Remark.Informed != true) // 未通知
-                    //                 {
-                    //                     console.log('this.User', this.User);
-                    //                     console.log('Task.Principal', Task.Principal);
-                    //                     console.log('Remark.Principal', Remark.Principal);
-                    //                     Change = true;
-                    //                     let Msg: any = {};
-                    //                     Msg.Title = Remark.Principal;
-                    //                     Msg.body = Remark.Info;
-                    //                     this.Msgs.push(Msg);
-                    //                     Remark.Informed = true;
-                    //                     // https://stackoverflow.com/questions/56814951/
-                    //                     // https://stackoverflow.com/questions/47268241/angularfire2-transactions-and-batch-writes-in-firestore
+                    if (Task.Remarks != undefined) {
+                        if ((this.LoginInfo.Account == Task.Principal || this.LoginInfo.Admin)) {
+                            Task.Remarks.forEach(Remark => {
+                                if ((Remark.Principal != Task.Principal)) {
 
-                    //                     this.NotificationPush(Msg);
-                    //                 }
-                    //             } else {
-                    //                 if (Remark.Informed != true) // 未通知
-                    //                 {
-                    //                     console.log('this.User', this.User);
-                    //                     console.log('Task.Principal', Task.Principal);
-                    //                     console.log('Remark.Principal', Remark.Principal);
-                    //                     Change = true;
-                    //                     let Msg: any = {};
-                    //                     Msg.Title = Remark.Principal;
-                    //                     Msg.body = Remark.Info;
-                    //                     this.Msgs.push(Msg);
-                    //                     Remark.Informed = true;
-                    //                     // https://stackoverflow.com/questions/56814951/
-                    //                     // https://stackoverflow.com/questions/47268241/angularfire2-transactions-and-batch-writes-in-firestore
+                                    // https://stackoverflow.com/questions/56814951/
+                                    // https://stackoverflow.com/questions/47268241/angularfire2-transactions-and-batch-writes-in-firestore
 
-                    //                     this.NotificationPush(Msg);
-                    //                 }
-                    //             }
-                    //         });
-                    //     }
-                    // }
-                    // if (Change) {
-                    //     console.log('Change');
-                    //     this._CloudFirestore.doc('Tasks/' + Task.id).update(Task);
-                    // }
+                                    if (Remark.Informed != true) // 未通知
+                                    {
+                                        // 給使用者的推播
+                                        console.log('給使用者的推播');
+                                        // console.log('this.LoginInfo.Account', this.LoginInfo.Account);
+                                        // console.log('Task.Principal', Task.Principal);
+                                        // console.log('Remark.Principal', Remark.Principal);
+                                        Change = true;
+                                        let Msg: any = {};
+                                        Msg.Title = Remark.Principal;
+                                        Msg.body = Remark.Info;
+                                        Remark.Informed = true;
+
+                                        this.PushNotification(Msg);
+                                    }
+                                } else if (this.LoginInfo.Admin) {
+                                    if (Remark.Informed != true) // 未通知
+                                    {
+                                        // 給管理員的推播
+                                        console.log('給管理員的推播');
+                                        // console.log('this.LoginInfo.Account', this.LoginInfo.Account);
+                                        // console.log('Task.Principal', Task.Principal);
+                                        // console.log('Remark.Principal', Remark.Principal);
+                                        Change = true;
+                                        let Msg: any = {};
+                                        Msg.Title = Remark.Principal;
+                                        Msg.body = Remark.Info;
+                                        Remark.Informed = true;
+
+                                        this.PushNotification(Msg);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    if (Change) {
+                        console.log('Change');
+                        this._CloudFirestore.doc('Tasks/' + Task.id).update(Task);
+                    }
                 });
                 if (Messages.length != 0 && !IsAdmin) {
                     console.log('Batch');
@@ -132,13 +136,19 @@ export class AppComponent extends BaseComponent {
 
         if ('Notification' in window) {
             if ('serviceWorker' in navigator) {
+                let SWorker = false;
                 navigator.serviceWorker.ready.then(Registration => {
                     // https://stackoverflow.com/questions/39418545/chrome-push-notification-how-to-open-url-adress-after-click/39457287
                     Registration.showNotification(Message.Title, Option);
+                    SWorker = true;
                 });
+                if (!SWorker) {
+                    new Notification(Message.Title, Option);
+                }
             } else {
                 new Notification(Message.Title, Option);
             }
+            console.log('PushNotification', Message);
         } else {
             alert('\n 請打開通知以接收回報訊息!!\n\n Chrome 請點選 [ 網址列 ] 左側 ⓘ 開啟通知，感謝!!');
         }
