@@ -46,7 +46,7 @@ export class EditTaskComponent extends BaseComponent implements OnInit {
         });
 
         this._ShardService.SharedUsersInfo.subscribe(res => {
-            // console.log('UsersComponent SharedUsersInfo Work', res);
+            console.log('UsersComponent SharedUsersInfo Work', res);
             this.UsersInfo = res;
         });
 
@@ -82,14 +82,14 @@ export class EditTaskComponent extends BaseComponent implements OnInit {
     EditTask() {
         let Principal = this.Task.Principal;
         if (Principal != null && Principal != '' && Principal != undefined) {
-
+            console.log('this.Title', this.Title);
             if (this.Title == '新增') {
                 let Collection = this._CloudFirestore.collection('Tasks').add(
                     {
                         Date: this.GetNowDateString(),
                         IsClosed: false,
                         Principal: this.Task.Principal,
-                        Task: this.Task,
+                        Task: this.Task.Task,
                     });
                 this._Router.navigate(['tasks']);
             } else {

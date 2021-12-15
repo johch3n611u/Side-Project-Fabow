@@ -107,14 +107,8 @@ export class TasksComponent extends BaseComponent implements OnInit {
     UndoneTasks = [];
 
     GetTasks() {
-        console.log('TasksComponent GetTasks');
-        let Collection = this.GetTasksCollection();
-        this.GetTasksSubscribe(Collection);
-    }
-
-    GetTasksCollection() {
-        console.log('TasksComponent GetTasksCollection Work');
-        return this._CloudFirestore.collection('Tasks', ref => ref.orderBy('Date'))
+        console.log('GetTasks');
+        let Collection = this._CloudFirestore.collection('Tasks', ref => ref.orderBy('Date'))
             .snapshotChanges().pipe(map((actions: DocumentChangeAction<any>[]) => {
                 return actions.map(a => {
                     const data = a.payload.doc.data() as any;
@@ -122,17 +116,11 @@ export class TasksComponent extends BaseComponent implements OnInit {
                     return { id, ...data };
                 });
             }));
-    }
-
-    GetTasksSubscribe(Collection) {
-        this.DoneTasks = [];
-        this.UndoneTasks = [];
-        console.log('TasksComponent GetTasks Work', this.LoginInfo);
         if (this.LoginInfo.DisplayName || this.LoginInfo.Admin) {
             let Subscribe = Collection.subscribe(Tasks => {
-                console.log('TasksComponent GetTasksCollection Work', Tasks);
-                this._ShardService.SetShareTasks(Tasks);
                 Subscribe.unsubscribe();
+                console.log('GetTasks Subscribe', Tasks);
+                this._ShardService.SetShareTasks(Tasks);
             });
         }
     }
@@ -177,7 +165,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
                 this.LoginInfo.Admin = true;
                 this.KeepLocalStorage();
             }).catch((error) => {
-                // window.alert(error.message);
                 window.alert('帳號密碼錯誤，如有問題請詢問管理員!!');
                 localStorage.clear();
                 this.RememberMe = false;

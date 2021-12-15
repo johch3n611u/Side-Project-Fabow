@@ -43,7 +43,6 @@ export class AppComponent extends BaseComponent {
         this.NotificationInit();
         this.SetNotifications();
         this._ShardService.SharedLoginInfo.subscribe(res => {
-            // console.log('AppComponent SharedLoginInfo Work');
             this.LoginInfo = res;
         });
     }
@@ -65,7 +64,6 @@ export class AppComponent extends BaseComponent {
                 Tasks.forEach(Task => {
                     let Change = false;
                     if (Task.Remarks != undefined) {
-                        // console.log('this.LoginInfo', this.LoginInfo);
                         if ((this.LoginInfo.Account == Task.Principal || this.LoginInfo.Admin)) {
                             Task.Remarks.forEach(Remark => {
                                 if (Remark.Informed != true) // 未通知
@@ -75,18 +73,14 @@ export class AppComponent extends BaseComponent {
                                         // https://stackoverflow.com/questions/56814951/
                                         // https://stackoverflow.com/questions/47268241/angularfire2-transactions-and-batch-writes-in-firestore
 
-
                                         // 給使用者的推播
                                         console.log('給使用者的推播');
-                                        // console.log('this.LoginInfo.Account', this.LoginInfo.Account);
-                                        // console.log('Task.Principal', Task.Principal);
-                                        // console.log('Remark.Principal', Remark.Principal);
                                         Change = true;
                                         let Msg: any = {};
                                         Msg.Title = Remark.Principal;
                                         Msg.body = Remark.Info;
                                         Remark.Informed = true;
-
+                                        Messages.push(Msg);
                                         this.PushNotification(Msg);
 
                                     }
@@ -94,15 +88,12 @@ export class AppComponent extends BaseComponent {
 
                                         // 給管理員的推播
                                         console.log('給管理員的推播');
-                                        // console.log('this.LoginInfo.Account', this.LoginInfo.Account);
-                                        // console.log('Task.Principal', Task.Principal);
-                                        // console.log('Remark.Principal', Remark.Principal);
                                         Change = true;
                                         let Msg: any = {};
                                         Msg.Title = Remark.Principal;
                                         Msg.body = Remark.Info;
                                         Remark.Informed = true;
-
+                                        Messages.push(Msg);
                                         this.PushNotification(Msg);
                                     }
                                 }
@@ -114,6 +105,8 @@ export class AppComponent extends BaseComponent {
                         this._CloudFirestore.doc('Tasks/' + Task.id).update(Task);
                     }
                 });
+                console.log('Messages.length', Messages.length);
+                console.log('Messages.length != 0 && !this.LoginInfo.Admin', Messages.length != 0 && !this.LoginInfo.Admin);
                 if (Messages.length != 0 && !this.LoginInfo.Admin) {
                     console.log('Batch');
                     batch.commit();
@@ -157,9 +150,6 @@ export class AppComponent extends BaseComponent {
     AppInitInfo = new AppInitInfo;
     // 初始化推播
     NotificationInit() {
-
-        // console.log('AppComponent NotificationInit');
-
         // https://ithelp.ithome.com.tw/articles/10196486
         // https://cythilya.github.io/2017/07/09/notification/
         // https://blog.no2don.com/2018/01/javascript.html
@@ -190,9 +180,6 @@ export class AppComponent extends BaseComponent {
 
     // 初始化 ServiceWork
     ServiceWorkInit() {
-
-        // console.log('AppComponent ServiceWorkInit');
-
         let NotifyConfig = {
             body: '\\ ^o^ / 歡迎使用 Fabow !!', // 設定內容
             onclick: function () {

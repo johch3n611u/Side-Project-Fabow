@@ -9,10 +9,10 @@
     <label for="exampleInputEmail1" class="form-label Mgbtn">負責人員</label>
     <select class="form-control Mgbtn" id="Principal" [(ngModel)]="Task.Principal">
         <option value="">請選擇</option>
-        <option *ngFor="let User of UsersInfo;let i = index;" [value]="User.Name">{{User.Name}}</option>
+        <option *ngFor="let User of UsersInfo;let i = index;" [value]="User.Account">{{User.Account}}</option>
     </select>
     <label for="exampleInputEmail1" class="form-label Mgbtn">工作項目</label>
-    <textarea class="form-control Mgbtn" rows="7" [(ngModel)]="Task"></textarea>
+    <textarea class="form-control Mgbtn" rows="7" [(ngModel)]="Task.Task"></textarea>
     <br>
     <button type="submit" class="btn btn-secondary Mgbtn" (click)="EditTask()">{{Title}}</button>
 </div>
