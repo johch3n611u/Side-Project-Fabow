@@ -39,13 +39,17 @@ export class TasksComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this._ShardService.SharedLoginInfo.subscribe(res => { console.log('TasksComponent SharedLoginInfo Work'); this.LoginInfo = res; });
-
         this.GetUsers().subscribe(res => {
             console.log('TasksComponent GetUsers Work');
             this._ShardService.SetSharedUsersInfo(res);
             this.UsersInfo = res;
             this.RememberMeInit();
+        });
+
+        this._ShardService.SharedLoginInfo.subscribe(res => {
+            console.log('TasksComponent SharedLoginInfo Work');
+            this.LoginInfo = res;
+            this.GetTasks();
         });
 
         this._ShardService.SharedAppInitInfo.subscribe(res => { console.log('TasksComponent SharedAppInitInfo Work'); this.AppInitInfo = res; });
@@ -58,7 +62,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
             this.LoginInfo.Account = localStorage.getItem('Account');
             this.LoginInfo.Password = localStorage.getItem('Password');
             this.FakeLogin();
-            this.GetTasks();
         }
     }
 

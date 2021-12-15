@@ -42,29 +42,33 @@ export class AppComponent extends BaseComponent {
         // this.Msg = this._MessagingService.currentMessage;
         this.NotificationInit();
         this.SetNotifications();
-        this._ShardService.SharedLoginInfo.subscribe(res => { console.log('AppComponent SharedLoginInfo Work'); this.LoginInfo = res; });
+        this._ShardService.SharedLoginInfo.subscribe(res => {
+            // console.log('AppComponent SharedLoginInfo Work');
+            this.LoginInfo = res;
+        });
     }
 
     // 推播設定
     SetNotifications() {
-        console.log('AppComponent SetNotifications Work');
+        // console.log('AppComponent SetNotifications Work');
         let Messages = [];
         this._ShardService.SharedTasks.subscribe(Tasks => {
             console.log('CheckMsg');
             let batch = this._CloudFirestore.firestore.batch();
             Tasks.forEach(Task => {
                 let Change = false;
-                // console.log('Task', Task);
                 if (Task.Remarks != undefined) {
+                    // console.log('this.LoginInfo', this.LoginInfo);
                     if ((this.LoginInfo.Account == Task.Principal || this.LoginInfo.Admin)) {
                         Task.Remarks.forEach(Remark => {
-                            if ((Remark.Principal != Task.Principal)) {
+                            if (Remark.Informed != true) // 未通知
+                            {
+                                if ((Remark.Principal != Task.Principal) && !this.LoginInfo.Admin) {
 
-                                // https://stackoverflow.com/questions/56814951/
-                                // https://stackoverflow.com/questions/47268241/angularfire2-transactions-and-batch-writes-in-firestore
+                                    // https://stackoverflow.com/questions/56814951/
+                                    // https://stackoverflow.com/questions/47268241/angularfire2-transactions-and-batch-writes-in-firestore
 
-                                if (Remark.Informed != true) // 未通知
-                                {
+
                                     // 給使用者的推播
                                     console.log('給使用者的推播');
                                     // console.log('this.LoginInfo.Account', this.LoginInfo.Account);
@@ -77,10 +81,10 @@ export class AppComponent extends BaseComponent {
                                     Remark.Informed = true;
 
                                     this.PushNotification(Msg);
+
                                 }
-                            } else if (this.LoginInfo.Admin) {
-                                if (Remark.Informed != true) // 未通知
-                                {
+                                if ((Remark.Principal == Task.Principal) && this.LoginInfo.Admin) {
+
                                     // 給管理員的推播
                                     console.log('給管理員的推播');
                                     // console.log('this.LoginInfo.Account', this.LoginInfo.Account);
@@ -146,7 +150,7 @@ export class AppComponent extends BaseComponent {
     // 初始化推播
     NotificationInit() {
 
-        console.log('AppComponent NotificationInit');
+        // console.log('AppComponent NotificationInit');
 
         // https://ithelp.ithome.com.tw/articles/10196486
         // https://cythilya.github.io/2017/07/09/notification/
@@ -179,7 +183,7 @@ export class AppComponent extends BaseComponent {
     // 初始化 ServiceWork
     ServiceWorkInit() {
 
-        console.log('AppComponent ServiceWorkInit');
+        // console.log('AppComponent ServiceWorkInit');
 
         let NotifyConfig = {
             body: '\\ ^o^ / 歡迎使用 Fabow !!', // 設定內容

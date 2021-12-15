@@ -39,20 +39,20 @@ export class UsersComponent extends BaseComponent implements OnInit {
     ngOnInit(): void {
 
         this._ShardService.SharedLoginInfo.subscribe(res => {
-            console.log('UsersComponent SharedLoginInfo Work', res);
+            // console.log('UsersComponent SharedLoginInfo Work', res);
             this.LoginInfo = res;
             this.AuthNavigate();
         });
 
         this._ShardService.SharedUsersInfo.subscribe(res => {
-            console.log('UsersComponent SharedUsersInfo Work', res);
+            // console.log('UsersComponent SharedUsersInfo Work', res);
             this.UsersInfo = res;
         });
     }
 
     // 驗證
     AuthNavigate() {
-        console.log('AuthNavigate Work', this.LoginInfo);
+        // console.log('AuthNavigate Work', this.LoginInfo);
         if (!this.LoginInfo.Admin) {
             this._Router.navigateByUrl('/tasks');
         }
