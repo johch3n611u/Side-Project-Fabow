@@ -105,11 +105,13 @@ export class AppComponent extends BaseComponent {
                         this._CloudFirestore.doc('Tasks/' + Task.id).update(Task);
                     }
                 });
+
                 if (Messages.length != 0) {
                     console.log('Batch');
                     batch.commit();
-                    this._ShardService.SetShareTasks(Tasks);
                 }
+
+                this._ShardService.SetShareTasks(Tasks);
             });
     }
 
