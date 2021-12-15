@@ -51,9 +51,7 @@ export class AppComponent extends BaseComponent {
     // 推播設定
     SetNotifications() {
         console.log('AppComponent SetNotifications Work');
-
         let Messages = [];
-
         this._CloudFirestore.collection('Tasks', ref => ref.orderBy('Date'))
             .snapshotChanges().pipe(map((actions: DocumentChangeAction<any>[]) => {
                 return actions.map(a => {
@@ -119,6 +117,7 @@ export class AppComponent extends BaseComponent {
                 if (Messages.length != 0 && !this.LoginInfo.Admin) {
                     console.log('Batch');
                     batch.commit();
+                    this._ShardService.SetShareTasks(Tasks);
                 }
             });
     }

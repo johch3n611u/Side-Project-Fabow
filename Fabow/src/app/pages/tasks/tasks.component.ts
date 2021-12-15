@@ -52,7 +52,43 @@ export class TasksComponent extends BaseComponent implements OnInit {
             this.GetTasks();
         });
 
-        this._ShardService.SharedAppInitInfo.subscribe(res => { console.log('TasksComponent SharedAppInitInfo Work'); this.AppInitInfo = res; });
+        this._ShardService.SharedAppInitInfo.subscribe(res => {
+            console.log('TasksComponent SharedAppInitInfo Work');
+            this.AppInitInfo = res;
+        });
+
+        this._ShardService.SharedTasks.subscribe(Tasks => {
+            this.DoneTasks = [];
+            this.UndoneTasks = [];
+            Tasks.forEach((element: any) => {
+                if (element.id == this.RemarkBtnOpenedId) {
+                    element.RemarkBtn = true;
+                } else {
+                    element.RemarkBtn = false;
+                }
+                if (element.IsClosed) {
+                    this.DoneTasks.push(element);
+                } else {
+                    this.UndoneTasks.push(element);
+                }
+            });
+            if (!this.LoginInfo.Admin) {
+                let Temp1 = [];
+                this.DoneTasks.forEach(res => {
+                    if (res.Principal == this.LoginInfo.DisplayName) {
+                        Temp1.push(res);
+                    }
+                });
+                this.DoneTasks = Temp1;
+                let Temp2 = [];
+                this.UndoneTasks.forEach(res => {
+                    if (res.Principal == this.LoginInfo.DisplayName) {
+                        Temp2.push(res);
+                    }
+                });
+                this.UndoneTasks = Temp2;
+            }
+        });
     }
 
     RememberMeInit() {
@@ -95,37 +131,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
         if (this.LoginInfo.DisplayName || this.LoginInfo.Admin) {
             let Subscribe = Collection.subscribe(Tasks => {
                 console.log('TasksComponent GetTasksCollection Work', Tasks);
-                this.DoneTasks = [];
-                this.UndoneTasks = [];
-                Tasks.forEach((element: any) => {
-                    if (element.id == this.RemarkBtnOpenedId) {
-                        element.RemarkBtn = true;
-                    } else {
-                        element.RemarkBtn = false;
-                    }
-                    if (element.IsClosed) {
-                        this.DoneTasks.push(element);
-                    } else {
-                        this.UndoneTasks.push(element);
-                    }
-                });
-                if (!this.LoginInfo.Admin) {
-                    let Temp1 = [];
-                    this.DoneTasks.forEach(res => {
-                        if (res.Principal == this.LoginInfo.DisplayName) {
-                            Temp1.push(res);
-                        }
-                    });
-                    this.DoneTasks = Temp1;
-                    let Temp2 = [];
-                    this.UndoneTasks.forEach(res => {
-                        if (res.Principal == this.LoginInfo.DisplayName) {
-                            Temp2.push(res);
-                        }
-                    });
-                    this.UndoneTasks = Temp2;
-                }
-
+                this._ShardService.SetShareTasks(Tasks);
                 Subscribe.unsubscribe();
             });
         }
