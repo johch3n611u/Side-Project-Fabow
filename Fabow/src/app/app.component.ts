@@ -40,14 +40,14 @@ export class AppComponent extends BaseComponent {
         // this._MessagingService.RequestPermission();
         // this._MessagingService.ReceiveMessage();
         // this.Msg = this._MessagingService.currentMessage;
-        // this.NotificationInit();
-        // this.SetNotifications();
-        this._ShardService.SharedLoginInfo.subscribe(res => { this.LoginInfo = res; });
+        this.NotificationInit();
+        this.SetNotifications();
+        this._ShardService.SharedLoginInfo.subscribe(res => { console.log('AppComponent SharedLoginInfo Work'); this.LoginInfo = res; });
     }
 
     // 推播設定
     SetNotifications() {
-        console.log('SetNotifications Work');
+        console.log('AppComponent SetNotifications Work');
         let Messages = [];
         this._ShardService.SharedTasks.subscribe(Tasks => {
             console.log('CheckMsg');
@@ -136,7 +136,7 @@ export class AppComponent extends BaseComponent {
             } else {
                 new Notification(Message.Title, Option);
             }
-            console.log('PushNotification', Message);
+
         } else {
             alert('\n 請打開通知以接收回報訊息!!\n\n Chrome 請點選 [ 網址列 ] 左側 ⓘ 開啟通知，感謝!!');
         }
@@ -145,6 +145,9 @@ export class AppComponent extends BaseComponent {
     AppInitInfo = new AppInitInfo;
     // 初始化推播
     NotificationInit() {
+
+        console.log('AppComponent NotificationInit');
+
         // https://ithelp.ithome.com.tw/articles/10196486
         // https://cythilya.github.io/2017/07/09/notification/
         // https://blog.no2don.com/2018/01/javascript.html
@@ -153,7 +156,6 @@ export class AppComponent extends BaseComponent {
             this.AppInitInfo.NotificationSup = true;
             let Noti: any = Notification;
             this.AppInitInfo.NotificationStatus = Noti.permission;
-            console.log('Notification Permission', Noti.permission);
             let NotiPNot = Noti.permission === 'default' || Noti.permission === 'undefined' || Noti.permission === 'denied';
             if (NotiPNot) {
                 // 要求授權
@@ -176,6 +178,9 @@ export class AppComponent extends BaseComponent {
 
     // 初始化 ServiceWork
     ServiceWorkInit() {
+
+        console.log('AppComponent ServiceWorkInit');
+
         let NotifyConfig = {
             body: '\\ ^o^ / 歡迎使用 Fabow !!', // 設定內容
             onclick: function () {

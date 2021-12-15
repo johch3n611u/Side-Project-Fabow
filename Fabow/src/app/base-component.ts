@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { map } from "rxjs/operators";
 import * as moment from 'moment';
 import { ShardService } from "./services/shard/shard.service";
+import { LoginInfo, UserInfo } from "./model/shard-model";
 
 
 export class BaseComponent {
@@ -17,7 +18,6 @@ export class BaseComponent {
         public _RealtimeDatabase: AngularFireDatabase,
         public _ShardService: ShardService,
     ) {
-
     }
 
     // 返回上一頁
@@ -109,12 +109,4 @@ export class BaseComponent {
         return key;
     }
 
-    // Firebase 驗證
-    FirebaseAuth() {
-        this._AngularFireAuth.authState.subscribe(auth => {
-            if (auth == undefined || auth == null || auth == undefined) {
-                this._Router.navigateByUrl('/tasks');
-            }
-        });
-    }
 }

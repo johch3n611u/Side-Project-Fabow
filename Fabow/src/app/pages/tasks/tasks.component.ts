@@ -36,21 +36,30 @@ export class TasksComponent extends BaseComponent implements OnInit {
     UsersInfo: UserInfo[] = [] as UserInfo[];
     LoginInfo = new LoginInfo;
     AppInitInfo = new AppInitInfo;
+
     ngOnInit(): void {
 
+        this._ShardService.SharedLoginInfo.subscribe(res => { console.log('TasksComponent SharedLoginInfo Work'); this.LoginInfo = res; });
+
+        this.GetUsers().subscribe(res => {
+            console.log('TasksComponent GetUsers Work');
+            this._ShardService.SetSharedUsersInfo(res);
+            this.UsersInfo = res;
+            this.RememberMeInit();
+        });
+
+        this._ShardService.SharedAppInitInfo.subscribe(res => { console.log('TasksComponent SharedAppInitInfo Work'); this.AppInitInfo = res; });
+    }
+
+    RememberMeInit() {
+        console.log('TasksComponent RememberMeInit');
         this.RememberMe = Boolean(localStorage.getItem('RememberMe'));
         if (this.RememberMe) {
             this.LoginInfo.Account = localStorage.getItem('Account');
             this.LoginInfo.Password = localStorage.getItem('Password');
+            this.FakeLogin();
+            this.GetTasks();
         }
-
-        this.GetUsers().subscribe(res => {
-            this._ShardService.SetSharedUsersInfo(res);
-            this.UsersInfo = res;
-        });
-
-        this._ShardService.SharedAppInitInfo.subscribe(res => { this.AppInitInfo = res; });
-        this._ShardService.SharedLoginInfo.subscribe(res => { this.LoginInfo = res; });
     }
 
     TeskTasks = [];
@@ -59,55 +68,65 @@ export class TasksComponent extends BaseComponent implements OnInit {
     UndoneTasks = [];
 
     GetTasks() {
+        console.log('TasksComponent GetTasks');
+        let Collection = this.GetTasksCollection();
+        this.GetTasksSubscribe(Collection);
+    }
+
+    GetTasksCollection() {
+        console.log('TasksComponent GetTasksCollection Work');
+        return this._CloudFirestore.collection('Tasks', ref => ref.orderBy('Date'))
+            .snapshotChanges().pipe(map((actions: DocumentChangeAction<any>[]) => {
+                return actions.map(a => {
+                    const data = a.payload.doc.data() as any;
+                    const id = a.payload.doc.id;
+                    return { id, ...data };
+                });
+            }));
+    }
+
+    GetTasksSubscribe(Collection) {
         this.DoneTasks = [];
         this.UndoneTasks = [];
-        this._AngularFireAuth.authState.subscribe(Auth => {
-            console.log('GetAuth Work');
-            if (this.LoginInfo.DisplayName || this.LoginInfo.Admin) {
-                let Collection = this._CloudFirestore.collection('Tasks', ref => ref.orderBy('Date'))
-                    .snapshotChanges().pipe(map((actions: DocumentChangeAction<any>[]) => {
-                        return actions.map(a => {
-                            const data = a.payload.doc.data() as any;
-                            const id = a.payload.doc.id;
-                            return { id, ...data };
-                        });
-                    }));
-                Collection.subscribe(Tasks => {
-                    console.log('GetTasks Work');
-                    this._ShardService.SetShareTasks(Tasks);
-                    this.DoneTasks = [];
-                    this.UndoneTasks = [];
-                    Tasks.forEach((element: any) => {
-                        if (element.id == this.RemarkBtnOpenedId) {
-                            element.RemarkBtn = true;
-                        } else {
-                            element.RemarkBtn = false;
-                        }
-                        if (element.IsClosed) {
-                            this.DoneTasks.push(element);
-                        } else {
-                            this.UndoneTasks.push(element);
-                        }
-                    });
-                    if (!this.LoginInfo.Admin) {
-                        let Temp1 = [];
-                        this.DoneTasks.forEach(res => {
-                            if (res.Principal == this.LoginInfo.DisplayName) {
-                                Temp1.push(res);
-                            }
-                        });
-                        this.DoneTasks = Temp1;
-                        let Temp2 = [];
-                        this.UndoneTasks.forEach(res => {
-                            if (res.Principal == this.LoginInfo.DisplayName) {
-                                Temp2.push(res);
-                            }
-                        });
-                        this.UndoneTasks = Temp2;
+        console.log('TasksComponent GetTasks Work', this.LoginInfo);
+        if (this.LoginInfo.DisplayName || this.LoginInfo.Admin) {
+            let Subscribe = Collection.subscribe(Tasks => {
+                console.log('TasksComponent GetTasksCollection Work', Tasks);
+                this._ShardService.SetShareTasks(Tasks);
+                this.DoneTasks = [];
+                this.UndoneTasks = [];
+                Tasks.forEach((element: any) => {
+                    if (element.id == this.RemarkBtnOpenedId) {
+                        element.RemarkBtn = true;
+                    } else {
+                        element.RemarkBtn = false;
+                    }
+                    if (element.IsClosed) {
+                        this.DoneTasks.push(element);
+                    } else {
+                        this.UndoneTasks.push(element);
                     }
                 });
-            }
-        });
+                if (!this.LoginInfo.Admin) {
+                    let Temp1 = [];
+                    this.DoneTasks.forEach(res => {
+                        if (res.Principal == this.LoginInfo.DisplayName) {
+                            Temp1.push(res);
+                        }
+                    });
+                    this.DoneTasks = Temp1;
+                    let Temp2 = [];
+                    this.UndoneTasks.forEach(res => {
+                        if (res.Principal == this.LoginInfo.DisplayName) {
+                            Temp2.push(res);
+                        }
+                    });
+                    this.UndoneTasks = Temp2;
+                }
+
+                Subscribe.unsubscribe();
+            });
+        }
     }
 
     // 任務狀態切換
@@ -128,6 +147,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
 
     // 負責人登入
     FakeLogin() {
+        console.log('TasksComponent FakeLogin');
         this.UsersInfo.forEach(element => {
             if (element.Account == this.LoginInfo.Account && element.Password == this.LoginInfo.Password) {
                 this.LoginInfo.DisplayName = this.LoginInfo.Account;
@@ -142,7 +162,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
 
     // Firebase 登入
     Login() {
-        console.log('this.LoginInfo', this.LoginInfo);
+        console.log('TasksComponent Login');
         return this._AngularFireAuth.signInWithEmailAndPassword(this.LoginInfo.Account, this.LoginInfo.Password)
             .then((result) => {
                 this.LoginInfo.DisplayName = '管理員';
@@ -151,13 +171,18 @@ export class TasksComponent extends BaseComponent implements OnInit {
             }).catch((error) => {
                 // window.alert(error.message);
                 window.alert('帳號密碼錯誤，如有問題請詢問管理員!!');
+                localStorage.clear();
+                this.RememberMe = false;
+                let obj = new LoginInfo;
+                this._ShardService.SetSharedLoginInfo(obj);
+                this.Logout();
             })
     }
 
     RememberMe = false;
     // 記住本地資料
     KeepLocalStorage() {
-        console.log('KeepLocalStorage');
+        console.log('TasksComponent KeepLocalStorage');
         localStorage.setItem('RememberMe', this.RememberMe.toString());
         if (this.RememberMe) {
             localStorage.setItem('Account', this.LoginInfo.Account);
@@ -196,6 +221,8 @@ export class TasksComponent extends BaseComponent implements OnInit {
             Task.RemarkBtn = true;
             this.TempRemark.Info = "";
         });
+
+        this.GetTasks();
     }
 
     HoverClass = 'MouseOut';
