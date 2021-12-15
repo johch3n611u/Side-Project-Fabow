@@ -40,20 +40,17 @@ export class TasksComponent extends BaseComponent implements OnInit {
     ngOnInit(): void {
 
         this.GetUsers().subscribe(res => {
-            console.log('TasksComponent GetUsers Work');
             this._ShardService.SetSharedUsersInfo(res);
             this.UsersInfo = res;
             this.RememberMeInit();
         });
 
         this._ShardService.SharedLoginInfo.subscribe(res => {
-            console.log('TasksComponent SharedLoginInfo Work');
             this.LoginInfo = res;
             this.GetTasks();
         });
 
         this._ShardService.SharedAppInitInfo.subscribe(res => {
-            console.log('TasksComponent SharedAppInitInfo Work');
             this.AppInitInfo = res;
         });
 
@@ -92,7 +89,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
     }
 
     RememberMeInit() {
-        console.log('TasksComponent RememberMeInit');
         this.RememberMe = Boolean(localStorage.getItem('RememberMe'));
         if (this.RememberMe) {
             this.LoginInfo.Account = localStorage.getItem('Account');
@@ -143,7 +139,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
 
     // 負責人登入
     FakeLogin() {
-        console.log('TasksComponent FakeLogin');
         this.UsersInfo.forEach(element => {
             if (element.Account == this.LoginInfo.Account && element.Password == this.LoginInfo.Password) {
                 this.LoginInfo.DisplayName = this.LoginInfo.Account;
@@ -151,6 +146,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
                 this.KeepLocalStorage();
             }
         });
+        console.log('FakeLogin', this.LoginInfo)
         if (!this.LoginInfo.DisplayName) {
             this.Login();
         }
@@ -158,7 +154,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
 
     // Firebase 登入
     Login() {
-        console.log('TasksComponent Login');
         return this._AngularFireAuth.signInWithEmailAndPassword(this.LoginInfo.Account, this.LoginInfo.Password)
             .then((result) => {
                 this.LoginInfo.DisplayName = '管理員';
@@ -177,9 +172,8 @@ export class TasksComponent extends BaseComponent implements OnInit {
     RememberMe = false;
     // 記住本地資料
     KeepLocalStorage() {
-        console.log('TasksComponent KeepLocalStorage');
-        localStorage.setItem('RememberMe', this.RememberMe.toString());
         if (this.RememberMe) {
+            localStorage.setItem('RememberMe', this.RememberMe.toString());
             localStorage.setItem('Account', this.LoginInfo.Account);
             localStorage.setItem('Password', this.LoginInfo.Password);
         }

@@ -40,13 +40,11 @@ export class EditTaskComponent extends BaseComponent implements OnInit {
     ngOnInit(): void {
 
         this._ShardService.SharedLoginInfo.subscribe(res => {
-            // console.log('UsersComponent SharedLoginInfo Work', res);
             this.LoginInfo = res;
             this.AuthNavigate();
         });
 
         this._ShardService.SharedUsersInfo.subscribe(res => {
-            console.log('UsersComponent SharedUsersInfo Work', res);
             this.UsersInfo = res;
         });
 
@@ -57,7 +55,6 @@ export class EditTaskComponent extends BaseComponent implements OnInit {
 
     // 驗證
     AuthNavigate() {
-        console.log('AuthNavigate Work', this.LoginInfo);
         if (!this.LoginInfo.Admin) {
             this._Router.navigateByUrl('/tasks');
         }
@@ -82,7 +79,6 @@ export class EditTaskComponent extends BaseComponent implements OnInit {
     EditTask() {
         let Principal = this.Task.Principal;
         if (Principal != null && Principal != '' && Principal != undefined) {
-            console.log('this.Title', this.Title);
             if (this.Title == '新增') {
                 let Collection = this._CloudFirestore.collection('Tasks').add(
                     {
