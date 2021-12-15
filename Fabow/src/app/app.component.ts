@@ -50,68 +50,77 @@ export class AppComponent extends BaseComponent {
 
     // 推播設定
     SetNotifications() {
-        // console.log('AppComponent SetNotifications Work');
+        console.log('AppComponent SetNotifications Work');
+
         let Messages = [];
-        this._ShardService.SharedTasks.subscribe(Tasks => {
-            console.log('CheckMsg');
-            let batch = this._CloudFirestore.firestore.batch();
-            Tasks.forEach(Task => {
-                let Change = false;
-                if (Task.Remarks != undefined) {
-                    // console.log('this.LoginInfo', this.LoginInfo);
-                    if ((this.LoginInfo.Account == Task.Principal || this.LoginInfo.Admin)) {
-                        Task.Remarks.forEach(Remark => {
-                            if (Remark.Informed != true) // 未通知
-                            {
-                                if ((Remark.Principal != Task.Principal) && !this.LoginInfo.Admin) {
 
-                                    // https://stackoverflow.com/questions/56814951/
-                                    // https://stackoverflow.com/questions/47268241/angularfire2-transactions-and-batch-writes-in-firestore
+        this._CloudFirestore.collection('Tasks', ref => ref.orderBy('Date'))
+            .snapshotChanges().pipe(map((actions: DocumentChangeAction<any>[]) => {
+                return actions.map(a => {
+                    const data = a.payload.doc.data() as any;
+                    const id = a.payload.doc.id;
+                    return { id, ...data };
+                });
+            })).subscribe(Tasks => {
+                console.log('CheckMsg');
+                let batch = this._CloudFirestore.firestore.batch();
+                Tasks.forEach(Task => {
+                    let Change = false;
+                    if (Task.Remarks != undefined) {
+                        // console.log('this.LoginInfo', this.LoginInfo);
+                        if ((this.LoginInfo.Account == Task.Principal || this.LoginInfo.Admin)) {
+                            Task.Remarks.forEach(Remark => {
+                                if (Remark.Informed != true) // 未通知
+                                {
+                                    if ((Remark.Principal != Task.Principal) && !this.LoginInfo.Admin) {
+
+                                        // https://stackoverflow.com/questions/56814951/
+                                        // https://stackoverflow.com/questions/47268241/angularfire2-transactions-and-batch-writes-in-firestore
 
 
-                                    // 給使用者的推播
-                                    console.log('給使用者的推播');
-                                    // console.log('this.LoginInfo.Account', this.LoginInfo.Account);
-                                    // console.log('Task.Principal', Task.Principal);
-                                    // console.log('Remark.Principal', Remark.Principal);
-                                    Change = true;
-                                    let Msg: any = {};
-                                    Msg.Title = Remark.Principal;
-                                    Msg.body = Remark.Info;
-                                    Remark.Informed = true;
+                                        // 給使用者的推播
+                                        console.log('給使用者的推播');
+                                        // console.log('this.LoginInfo.Account', this.LoginInfo.Account);
+                                        // console.log('Task.Principal', Task.Principal);
+                                        // console.log('Remark.Principal', Remark.Principal);
+                                        Change = true;
+                                        let Msg: any = {};
+                                        Msg.Title = Remark.Principal;
+                                        Msg.body = Remark.Info;
+                                        Remark.Informed = true;
 
-                                    this.PushNotification(Msg);
+                                        this.PushNotification(Msg);
 
+                                    }
+                                    if ((Remark.Principal == Task.Principal) && this.LoginInfo.Admin) {
+
+                                        // 給管理員的推播
+                                        console.log('給管理員的推播');
+                                        // console.log('this.LoginInfo.Account', this.LoginInfo.Account);
+                                        // console.log('Task.Principal', Task.Principal);
+                                        // console.log('Remark.Principal', Remark.Principal);
+                                        Change = true;
+                                        let Msg: any = {};
+                                        Msg.Title = Remark.Principal;
+                                        Msg.body = Remark.Info;
+                                        Remark.Informed = true;
+
+                                        this.PushNotification(Msg);
+                                    }
                                 }
-                                if ((Remark.Principal == Task.Principal) && this.LoginInfo.Admin) {
-
-                                    // 給管理員的推播
-                                    console.log('給管理員的推播');
-                                    // console.log('this.LoginInfo.Account', this.LoginInfo.Account);
-                                    // console.log('Task.Principal', Task.Principal);
-                                    // console.log('Remark.Principal', Remark.Principal);
-                                    Change = true;
-                                    let Msg: any = {};
-                                    Msg.Title = Remark.Principal;
-                                    Msg.body = Remark.Info;
-                                    Remark.Informed = true;
-
-                                    this.PushNotification(Msg);
-                                }
-                            }
-                        });
+                            });
+                        }
                     }
-                }
-                if (Change) {
-                    console.log('Change');
-                    this._CloudFirestore.doc('Tasks/' + Task.id).update(Task);
+                    if (Change) {
+                        console.log('Change');
+                        this._CloudFirestore.doc('Tasks/' + Task.id).update(Task);
+                    }
+                });
+                if (Messages.length != 0 && !this.LoginInfo.Admin) {
+                    console.log('Batch');
+                    batch.commit();
                 }
             });
-            if (Messages.length != 0 && !this.LoginInfo.Admin) {
-                console.log('Batch');
-                batch.commit();
-            }
-        });
     }
 
     // 推播

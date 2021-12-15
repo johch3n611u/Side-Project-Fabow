@@ -95,7 +95,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
         if (this.LoginInfo.DisplayName || this.LoginInfo.Admin) {
             let Subscribe = Collection.subscribe(Tasks => {
                 console.log('TasksComponent GetTasksCollection Work', Tasks);
-                this._ShardService.SetShareTasks(Tasks);
                 this.DoneTasks = [];
                 this.UndoneTasks = [];
                 Tasks.forEach((element: any) => {
