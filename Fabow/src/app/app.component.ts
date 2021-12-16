@@ -48,11 +48,14 @@ export class AppComponent extends BaseComponent {
         this._ShardService.SharedLoginInfo.subscribe(res => {
             this.LoginInfo = res;
 
+            let Control = false;
+
             // 發送訊息並刪除
             let Subscribe = this.GetNotificationTasks().subscribe(Tasks => {
 
-                // Subscribe.unsubscribe();
-                setTimeout('', 5000);
+                if (Control) {
+                    Subscribe.unsubscribe();
+                }
 
                 console.log('GetNotificationTasks', Tasks);
                 Tasks.forEach(Task => {
@@ -66,6 +69,7 @@ export class AppComponent extends BaseComponent {
                         this.PushNotification(Task);
                         this._RealtimeDatabase.object('/NotificationTasks/' + Task.key).remove()
                             .then((result) => {
+                                Control = !Control;
                             })
                             .catch((result) => {
                                 console.log('RemoveUser', result);
@@ -79,6 +83,7 @@ export class AppComponent extends BaseComponent {
                         this.PushNotification(Task);
                         this._RealtimeDatabase.object('/NotificationTasks/' + Task.key).remove()
                             .then((result) => {
+                                Control = !Control;
                             })
                             .catch((result) => {
                                 console.log('RemoveUser', result);
