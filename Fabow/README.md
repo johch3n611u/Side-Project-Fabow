@@ -37,3 +37,5 @@
 30. [研究過後前端三大神獸看起來不能使用都有大小上的限制](https://medium.com/@bebebobohaha/cookie-localstorage-sessionstorage-%E5%B7%AE%E7%95%B0-9e1d5df3dd7f)，決定利用 Firebase 資料來做機制
 31. 增加欄位來判定需不需要通知，通知完後將欄位回寫已通知，代價是增加讀寫一次，相較於 call 外部 api 後續可能出現的問題是較可以接受的
 32. 目前遇到問題為 notification 會重複發送，還在確認是否是速度太快互搶之類
+33. 原本想回去嘗試 [FCM](https://medium.com/mighty-ghost-hack/angular-8-firebase-cloud-messaging-push-notifications-cc80d9b36f82) 但發現還是必須跟 Firebase Auth 綁定，變成原來避免帳號相關流程複雜的問題又回來
+34. 所以還是嘗試別種辦法，目前想到是在開一個 Realtime Database Table 管控訊息，與任務資料拆開，或許會是最好的解法
