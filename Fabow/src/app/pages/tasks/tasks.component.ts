@@ -114,8 +114,8 @@ export class TasksComponent extends BaseComponent implements OnInit {
             }));
         if (this.LoginInfo.DisplayName || this.LoginInfo.Admin) {
             let Subscribe = Collection.subscribe(Tasks => {
-                Subscribe.unsubscribe();
-                console.log('GetTasks Subscribe', Tasks);
+                // Subscribe.unsubscribe();
+                console.log('GetTasks Subscribe');
                 this._ShardService.SetShareTasks(Tasks);
             });
         }

@@ -40,8 +40,11 @@ export class AppComponent extends BaseComponent {
         // this._MessagingService.RequestPermission();
         // this._MessagingService.ReceiveMessage();
         // this.Msg = this._MessagingService.currentMessage;
+
         this.NotificationInit();
-        this.SetNotifications();
+
+        // this.SetNotifications();
+
         this._ShardService.SharedLoginInfo.subscribe(res => {
             this.LoginInfo = res;
         });
