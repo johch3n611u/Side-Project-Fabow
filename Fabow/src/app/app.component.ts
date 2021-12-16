@@ -48,7 +48,7 @@ export class AppComponent extends BaseComponent {
         this._ShardService.SharedLoginInfo.subscribe(res => {
             this.LoginInfo = res;
 
-            let Control = false;
+            let Control = true;
 
             // 發送訊息並刪除
             let Subscribe = this.GetNotificationTasks().subscribe(Tasks => {
@@ -57,39 +57,44 @@ export class AppComponent extends BaseComponent {
                     Subscribe.unsubscribe();
                 }
 
-                console.log('GetNotificationTasks', Tasks);
-                Tasks.forEach(Task => {
+                console.log('GetNotificationTasks', Control);
 
-                    console.log('Task', Task);
+                if (Control) {
 
-                    if (Task.Sender == '管理員' && this.LoginInfo.Admin) {
+                    Tasks.forEach(Task => {
 
-                        console.log('發給管理員');
+                        console.log('Task', Task);
 
-                        this.PushNotification(Task);
-                        this._RealtimeDatabase.object('/NotificationTasks/' + Task.key).remove()
-                            .then((result) => {
-                                Control = !Control;
-                            })
-                            .catch((result) => {
-                                console.log('RemoveUser', result);
-                            });
-                    }
+                        if (Task.Sender == '管理員' && this.LoginInfo.Admin) {
 
-                    if (Task.Sender == this.LoginInfo.Account) {
+                            console.log('發給管理員');
 
-                        console.log('發給' + Task.Sender);
+                            Control = !Control;
 
-                        this.PushNotification(Task);
-                        this._RealtimeDatabase.object('/NotificationTasks/' + Task.key).remove()
-                            .then((result) => {
-                                Control = !Control;
-                            })
-                            .catch((result) => {
-                                console.log('RemoveUser', result);
-                            });
-                    }
-                });
+                            this.PushNotification(Task);
+                            this._RealtimeDatabase.object('/NotificationTasks/' + Task.key).remove()
+                                .then((result) => {
+                                })
+                                .catch((result) => {
+                                });
+                        }
+
+                        if (Task.Sender == this.LoginInfo.Account) {
+
+                            console.log('發給' + Task.Sender);
+
+                            Control = !Control;
+
+                            this.PushNotification(Task);
+                            this._RealtimeDatabase.object('/NotificationTasks/' + Task.key).remove()
+                                .then((result) => {
+                                })
+                                .catch((result) => {
+                                });
+                        }
+                    });
+
+                }
 
             });
 
