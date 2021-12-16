@@ -109,4 +109,34 @@ export class BaseComponent {
         return key;
     }
 
+    // 取得發訊任務清單
+    GetNotificationTasks() {
+        let _Responce: AngularFireList<any> = this._RealtimeDatabase.list('NotificationTasks');
+        return _Responce.snapshotChanges().
+            pipe(
+                map(changes =>
+                    changes.map(c => ({ key: c.payload.key, ...c.payload.val() }))
+                )
+            );
+    }
+
+    // 增加發訊任務
+    AddNotificationTask(Task, TempRemark) {
+
+        let Sender = '管理員';
+        if (Task.Principal != TempRemark.Principal) {
+            Sender = Task.Principal;
+        }
+
+        this._RealtimeDatabase.list('/NotificationTasks/').push(
+
+            { Sender: Sender, Title: TempRemark.Principal, body: TempRemark.Info }
+        )
+            .then((result) => {
+
+            })
+            .catch((result) => {
+
+            });
+    }
 }

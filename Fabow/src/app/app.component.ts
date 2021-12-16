@@ -47,7 +47,49 @@ export class AppComponent extends BaseComponent {
 
         this._ShardService.SharedLoginInfo.subscribe(res => {
             this.LoginInfo = res;
+
+            // 發送訊息並刪除
+            let Subscribe = this.GetNotificationTasks().subscribe(Tasks => {
+
+                // Subscribe.unsubscribe();
+                setTimeout('', 5000);
+
+                console.log('GetNotificationTasks', Tasks);
+                Tasks.forEach(Task => {
+
+                    console.log('Task', Task);
+
+                    if (Task.Sender == '管理員' && this.LoginInfo.Admin) {
+
+                        console.log('發給管理員');
+
+                        this.PushNotification(Task);
+                        this._RealtimeDatabase.object('/NotificationTasks/' + Task.key).remove()
+                            .then((result) => {
+                            })
+                            .catch((result) => {
+                                console.log('RemoveUser', result);
+                            });
+                    }
+
+                    if (Task.Sender == this.LoginInfo.Account) {
+
+                        console.log('發給' + Task.Sender);
+
+                        this.PushNotification(Task);
+                        this._RealtimeDatabase.object('/NotificationTasks/' + Task.key).remove()
+                            .then((result) => {
+                            })
+                            .catch((result) => {
+                                console.log('RemoveUser', result);
+                            });
+                    }
+                });
+
+            });
+
         });
+
     }
 
     // 推播設定
@@ -139,7 +181,7 @@ export class AppComponent extends BaseComponent {
                     SWorker = true;
                 });
                 if (!SWorker) {
-                    let bb = new Notification(Message.Title, Option);
+                    new Notification(Message.Title, Option);
                 }
             } else {
                 new Notification(Message.Title, Option);

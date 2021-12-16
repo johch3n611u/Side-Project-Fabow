@@ -6,7 +6,7 @@ import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { map } from 'rxjs/operators';
 import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
 import { ShardService } from 'src/app/services/shard/shard.service';
-import { LoginInfo, Task, UserInfo } from 'src/app/model/shard-model';
+import { LoginInfo, Remark, Task, UserInfo } from 'src/app/model/shard-model';
 
 @Component({
     selector: 'app-edit-task',
@@ -97,6 +97,12 @@ export class EditTaskComponent extends BaseComponent implements OnInit {
                 });
                 this._Router.navigate(['tasks']);
             }
+
+            let TempRemark: Remark = {} as Remark;
+            TempRemark.Info = this.Task.Task;
+            TempRemark.Principal = '需求通知';
+            this.AddNotificationTask(this.Task, TempRemark);
+
         } else {
             alert('請選擇人員!');
         }

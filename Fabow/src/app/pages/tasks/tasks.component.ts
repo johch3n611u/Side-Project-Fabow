@@ -146,7 +146,6 @@ export class TasksComponent extends BaseComponent implements OnInit {
                 this.KeepLocalStorage();
             }
         });
-        console.log('FakeLogin', this.LoginInfo)
         if (!this.LoginInfo.DisplayName) {
             this.Login();
         }
@@ -181,12 +180,17 @@ export class TasksComponent extends BaseComponent implements OnInit {
     }
 
     // 結案
-    CloseTask(id) {
+    CloseTask(id, Task) {
         if (confirm('確定要結案嗎 ? 復原需要調整線上資料庫')) {
             let Collection = this._CloudFirestore.doc('Tasks/' + id).update({
                 Date: this.GetNowDateString(),
                 IsClosed: true,
             });
+
+            let TempRemark: Remark = {} as Remark;
+            TempRemark.Info = Task.Task;
+            TempRemark.Principal = '結案通知';
+            this.AddNotificationTask(Task, TempRemark);
         }
     }
 
@@ -198,12 +202,14 @@ export class TasksComponent extends BaseComponent implements OnInit {
         if (Task.Remarks == undefined) {
             Task.Remarks = [];
         }
+
         let Remark: any = {};
         Remark.Date = this.GetNowDateString();
         Remark.Principal = this.TempRemark.Principal;
         Remark.Info = this.TempRemark.Info;
         Remark.Informed = false;
         Task.Remarks.push(Remark);
+
         let Collection = this._CloudFirestore.doc('Tasks/' + Task.id).update({
             Remarks: Task.Remarks,
         }).then(res => {
@@ -211,7 +217,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
             this.TempRemark.Info = "";
         });
 
-        this.GetTasks();
+        this.AddNotificationTask(Task, this.TempRemark);
     }
 
     HoverClass = 'MouseOut';
