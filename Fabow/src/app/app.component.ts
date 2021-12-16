@@ -51,53 +51,57 @@ export class AppComponent extends BaseComponent {
             let Control = true;
 
             // 發送訊息並刪除
-            let Subscribe = this.GetNotificationTasks().subscribe(Tasks => {
+            this.GetNotificationTasks().subscribe(res => {
 
-                if (Control) {
-                    Subscribe.unsubscribe();
-                }
+                let Subscribe = this.GetNotificationTasks().subscribe(Tasks => {
 
-                console.log('GetNotificationTasks', Control);
+                    if (Control) {
+                        Subscribe.unsubscribe();
+                    }
 
-                if (Control) {
+                    console.log('GetNotificationTasks', Control);
 
-                    Tasks.forEach(Task => {
+                    if (Control) {
 
-                        console.log('Task', Task);
+                        Tasks.forEach(Task => {
 
-                        if (Task.Sender == '管理員' && this.LoginInfo.Admin) {
+                            console.log('Task', Task);
 
-                            console.log('發給管理員');
+                            if (Task.Sender == '管理員' && this.LoginInfo.Admin) {
 
-                            Control = !Control;
+                                console.log('發給管理員');
 
-                            this.PushNotification(Task);
-                            this._RealtimeDatabase.object('/NotificationTasks/' + Task.key).remove()
-                                .then((result) => {
-                                })
-                                .catch((result) => {
-                                });
-                        }
+                                Control = !Control;
 
-                        if (Task.Sender == this.LoginInfo.Account) {
+                                this.PushNotification(Task);
+                                this._RealtimeDatabase.object('/NotificationTasks/' + Task.key).remove()
+                                    .then((result) => {
+                                    })
+                                    .catch((result) => {
+                                    });
+                            }
 
-                            console.log('發給' + Task.Sender);
+                            if (Task.Sender == this.LoginInfo.Account) {
 
-                            Control = !Control;
+                                console.log('發給' + Task.Sender);
 
-                            this.PushNotification(Task);
-                            this._RealtimeDatabase.object('/NotificationTasks/' + Task.key).remove()
-                                .then((result) => {
-                                })
-                                .catch((result) => {
-                                });
-                        }
-                    });
+                                Control = !Control;
 
-                }
+                                this.PushNotification(Task);
+                                this._RealtimeDatabase.object('/NotificationTasks/' + Task.key).remove()
+                                    .then((result) => {
+                                    })
+                                    .catch((result) => {
+                                    });
+                            }
+
+                        });
+
+                    }
+
+                });
 
             });
-
         });
 
     }
