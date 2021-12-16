@@ -78,7 +78,7 @@ export class AppComponent extends BaseComponent {
                                         Change = true;
                                         let Msg: any = {};
                                         Msg.Title = Remark.Principal;
-                                        Msg.body = Remark.Info;
+                                        Msg.body = Remark.Info + this.GetNowDateString();
                                         Remark.Informed = true;
                                         Messages.push(Msg);
                                         this.PushNotification(Msg);
@@ -91,7 +91,7 @@ export class AppComponent extends BaseComponent {
                                         Change = true;
                                         let Msg: any = {};
                                         Msg.Title = Remark.Principal;
-                                        Msg.body = Remark.Info;
+                                        Msg.body = Remark.Info + this.GetNowDateString();
                                         Remark.Informed = true;
                                         Messages.push(Msg);
                                         this.PushNotification(Msg);
@@ -136,7 +136,7 @@ export class AppComponent extends BaseComponent {
                     SWorker = true;
                 });
                 if (!SWorker) {
-                    new Notification(Message.Title, Option);
+                    let bb = new Notification(Message.Title, Option);
                 }
             } else {
                 new Notification(Message.Title, Option);

@@ -36,3 +36,4 @@
 29. 嘗試先用二種因為目前留言就有 realtime 功能，所需的推播只需要借助回傳的 subscribe 資料就不用再 call 外部 api 避免過多的問題
 30. [研究過後前端三大神獸看起來不能使用都有大小上的限制](https://medium.com/@bebebobohaha/cookie-localstorage-sessionstorage-%E5%B7%AE%E7%95%B0-9e1d5df3dd7f)，決定利用 Firebase 資料來做機制
 31. 增加欄位來判定需不需要通知，通知完後將欄位回寫已通知，代價是增加讀寫一次，相較於 call 外部 api 後續可能出現的問題是較可以接受的
+32. 目前遇到問題為 notification 會重複發送，還在確認是否是速度太快互搶之類

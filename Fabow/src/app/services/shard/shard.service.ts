@@ -63,4 +63,13 @@ export class ShardService {
         this._TasksSubject.next(Data);
         // console.log('SharedData', this.SharedData);
     }
+
+    private _Notification: Notification = {} as Notification;
+    private _NotificationSubject = new BehaviorSubject(this._Notification);
+    SharedNotification = this._NotificationSubject.asObservable();
+    SetShareNotification<T>(Data: Notification) {
+        // console.log('Data', Data);
+        this._NotificationSubject.next(Data);
+        // console.log('SharedData', this.SharedData);
+    }
 }
