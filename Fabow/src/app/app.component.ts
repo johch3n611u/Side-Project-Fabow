@@ -240,19 +240,22 @@ export class AppComponent extends BaseComponent {
         };
 
         if ('Notification' in window) {
-            if ('serviceWorker' in navigator) {
-                let SWorker = false;
-                navigator.serviceWorker.ready.then(Registration => {
-                    // https://stackoverflow.com/questions/39418545/chrome-push-notification-how-to-open-url-adress-after-click/39457287
-                    Registration.showNotification(Message.Title, Option);
-                    SWorker = true;
-                });
-                if (!SWorker) {
-                    new Notification(Message.Title, Option);
-                }
-            } else {
-                new Notification(Message.Title, Option);
-            }
+            // if ('serviceWorker' in navigator) {
+            //     let SWorker = false;
+            //     navigator.serviceWorker.ready.then(Registration => {
+            //         // https://stackoverflow.com/questions/39418545/chrome-push-notification-how-to-open-url-adress-after-click/39457287
+            //         Registration.showNotification(Message.Title, Option);
+            //         SWorker = true;
+            //     });
+            //     if (!SWorker) {
+            //         new Notification(Message.Title, Option);
+            //     }
+            // } else {
+            //     new Notification(Message.Title, Option);
+            // }
+
+            new Notification(Message.Title, Option);
+
 
         } else {
             alert('\n 請打開通知以接收回報訊息!!\n\n Chrome 請點選 [ 網址列 ] 左側 ⓘ 開啟通知，感謝!!');
