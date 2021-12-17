@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnChanges, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseComponent } from 'src/app/base-component';
@@ -14,7 +14,7 @@ import { UserInfo, LoginInfo, AppInitInfo, Remark } from 'src/app/model/shard-mo
     templateUrl: './tasks.component.html',
     styleUrls: ['./tasks.component.css']
 })
-export class TasksComponent extends BaseComponent implements OnInit {
+export class TasksComponent extends BaseComponent implements OnInit, OnChanges {
     constructor(
         public _AngularFireAuth: AngularFireAuth,
         public _Router: Router,
@@ -31,6 +31,14 @@ export class TasksComponent extends BaseComponent implements OnInit {
             _RealtimeDatabase,
             _ShardService,
         );
+    }
+
+    // ngDoCheck() {
+    //     console.log('ngDoCheck');
+    // }
+
+    ngOnChanges() {
+        console.log('ngOnChanges');
     }
 
     UsersInfo: UserInfo[] = [] as UserInfo[];
@@ -85,6 +93,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
                 });
                 this.UndoneTasks = Temp2;
             }
+            this.CheckMsg();
         });
     }
 
@@ -115,7 +124,7 @@ export class TasksComponent extends BaseComponent implements OnInit {
         if (this.LoginInfo.DisplayName || this.LoginInfo.Admin) {
             let Subscribe = Collection.subscribe(Tasks => {
                 // Subscribe.unsubscribe();
-                console.log('GetTasks Subscribe');
+                console.log('GetTasks Subscribe', this.GetNowDateString());
                 this._ShardService.SetShareTasks(Tasks);
             });
         }

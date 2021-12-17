@@ -47,61 +47,6 @@ export class AppComponent extends BaseComponent {
 
         this._ShardService.SharedLoginInfo.subscribe(res => {
             this.LoginInfo = res;
-
-            let Control = true;
-
-            // 發送訊息並刪除
-            this.GetNotificationTasks().subscribe(res => {
-
-                let Subscribe = this.GetNotificationTasks().subscribe(Tasks => {
-
-                    if (Control) {
-                        Subscribe.unsubscribe();
-                    }
-
-                    console.log('GetNotificationTasks', Control);
-
-                    if (Control) {
-
-                        Tasks.forEach(Task => {
-
-                            console.log('Task', Task);
-
-                            if (Task.Sender == '管理員' && this.LoginInfo.Admin) {
-
-                                console.log('發給管理員');
-
-                                Control = !Control;
-
-                                this.PushNotification(Task);
-                                this._RealtimeDatabase.object('/NotificationTasks/' + Task.key).remove()
-                                    .then((result) => {
-                                    })
-                                    .catch((result) => {
-                                    });
-                            }
-
-                            if (Task.Sender == this.LoginInfo.Account) {
-
-                                console.log('發給' + Task.Sender);
-
-                                Control = !Control;
-
-                                this.PushNotification(Task);
-                                this._RealtimeDatabase.object('/NotificationTasks/' + Task.key).remove()
-                                    .then((result) => {
-                                    })
-                                    .catch((result) => {
-                                    });
-                            }
-
-                        });
-
-                    }
-
-                });
-
-            });
         });
 
     }
@@ -172,38 +117,6 @@ export class AppComponent extends BaseComponent {
 
                 this._ShardService.SetShareTasks(Tasks);
             });
-    }
-
-    // 推播
-    PushNotification(Message: any) {
-        let Option = {
-            body: Message.body,
-            onclick: function () {
-                parent.focus();
-                window.focus();
-                window.open('https://johch3n611u.github.io/Side-Project-Fabow/tasks');
-                this.close();
-            }
-        };
-
-        if ('Notification' in window) {
-            if ('serviceWorker' in navigator) {
-                let SWorker = false;
-                navigator.serviceWorker.ready.then(Registration => {
-                    // https://stackoverflow.com/questions/39418545/chrome-push-notification-how-to-open-url-adress-after-click/39457287
-                    Registration.showNotification(Message.Title, Option);
-                    SWorker = true;
-                });
-                if (!SWorker) {
-                    new Notification(Message.Title, Option);
-                }
-            } else {
-                new Notification(Message.Title, Option);
-            }
-
-        } else {
-            alert('\n 請打開通知以接收回報訊息!!\n\n Chrome 請點選 [ 網址列 ] 左側 ⓘ 開啟通知，感謝!!');
-        }
     }
 
     AppInitInfo = new AppInitInfo;
