@@ -93,8 +93,9 @@ export class TasksComponent extends BaseComponent implements OnInit, OnChanges {
                 });
                 this.UndoneTasks = Temp2;
             }
-            this.CheckMsg();
         });
+
+        this.GetTasks();
     }
 
     RememberMeInit() {
@@ -112,7 +113,7 @@ export class TasksComponent extends BaseComponent implements OnInit, OnChanges {
     UndoneTasks = [];
 
     GetTasks() {
-        console.log('GetTasks');
+        console.log('任務清單初始化');
         let Collection = this._CloudFirestore.collection('Tasks', ref => ref.orderBy('Date'))
             .snapshotChanges().pipe(map((actions: DocumentChangeAction<any>[]) => {
                 return actions.map(a => {
@@ -124,7 +125,7 @@ export class TasksComponent extends BaseComponent implements OnInit, OnChanges {
         if (this.LoginInfo.DisplayName || this.LoginInfo.Admin) {
             let Subscribe = Collection.subscribe(Tasks => {
                 Subscribe.unsubscribe();
-                console.log('GetTasks Subscribe', this.GetNowDateString());
+                console.log('訂閱任務清單', this.GetNowDateString());
                 this._ShardService.SetShareTasks(Tasks);
             });
         }
@@ -143,6 +144,7 @@ export class TasksComponent extends BaseComponent implements OnInit, OnChanges {
             let obj = new LoginInfo;
             this._ShardService.SetSharedLoginInfo(obj);
             this.Logout();
+            this.GetTasks();
         }
     }
 

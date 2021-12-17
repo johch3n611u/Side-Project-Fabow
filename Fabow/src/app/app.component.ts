@@ -49,11 +49,11 @@ export class AppComponent extends BaseComponent {
             this.LoginInfo = res;
         });
 
+        this.CheckMsgInit();
     }
 
     // 推播設定
     SetNotifications() {
-        console.log('AppComponent SetNotifications Work');
         let Messages = [];
         this._CloudFirestore.collection('Tasks', ref => ref.orderBy('Date'))
             .snapshotChanges().pipe(map((actions: DocumentChangeAction<any>[]) => {
@@ -63,7 +63,6 @@ export class AppComponent extends BaseComponent {
                     return { id, ...data };
                 });
             })).subscribe(Tasks => {
-                console.log('CheckMsg');
                 let batch = this._CloudFirestore.firestore.batch();
                 Tasks.forEach(Task => {
                     let Change = false;

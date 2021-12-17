@@ -143,22 +143,12 @@ export class BaseComponent {
             });
     }
 
-    CheckMsg() {
+    CheckMsgInit() {
         // 發送訊息並刪除
         let Subscribe = this.GetNotificationTasks().subscribe(Tasks => {
-
-            // Subscribe.unsubscribe();
-
-            setTimeout(() => {
-
-            }, 5000);
-
             console.log('GetNotificationTasks', this.GetNowDateString());
-
             Tasks.forEach(Task => {
-
                 if (Task.Sender == '管理員' && this.LoginInfo.Admin) {
-
                     this._RealtimeDatabase.object('/NotificationTasks/' + Task.key).remove()
                         .then((result) => {
                             this.PushNotification(Task);
@@ -166,7 +156,6 @@ export class BaseComponent {
                         .catch((result) => {
                         });
                 }
-
                 if (Task.Sender == this.LoginInfo.Account) {
 
                     this._RealtimeDatabase.object('/NotificationTasks/' + Task.key).remove()
@@ -176,9 +165,7 @@ export class BaseComponent {
                         .catch((result) => {
                         });
                 }
-
             });
-
         });
     }
 
