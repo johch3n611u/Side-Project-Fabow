@@ -147,7 +147,7 @@ export class BaseComponent {
         // 發送訊息並刪除
         let Subscribe = this.GetNotificationTasks().subscribe(Tasks => {
 
-            Subscribe.unsubscribe();
+            // Subscribe.unsubscribe();
 
             setTimeout(() => {
 

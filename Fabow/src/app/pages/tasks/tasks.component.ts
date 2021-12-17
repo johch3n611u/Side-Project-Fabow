@@ -123,7 +123,7 @@ export class TasksComponent extends BaseComponent implements OnInit, OnChanges {
             }));
         if (this.LoginInfo.DisplayName || this.LoginInfo.Admin) {
             let Subscribe = Collection.subscribe(Tasks => {
-                // Subscribe.unsubscribe();
+                Subscribe.unsubscribe();
                 console.log('GetTasks Subscribe', this.GetNowDateString());
                 this._ShardService.SetShareTasks(Tasks);
             });
@@ -200,6 +200,7 @@ export class TasksComponent extends BaseComponent implements OnInit, OnChanges {
             TempRemark.Info = Task.Task;
             TempRemark.Principal = '結案通知';
             this.AddNotificationTask(Task, TempRemark);
+            this.GetTasks();
         }
     }
 
@@ -227,6 +228,7 @@ export class TasksComponent extends BaseComponent implements OnInit, OnChanges {
         });
 
         this.AddNotificationTask(Task, this.TempRemark);
+        this.GetTasks();
     }
 
     HoverClass = 'MouseOut';
