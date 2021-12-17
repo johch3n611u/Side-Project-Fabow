@@ -8,8 +8,6 @@ import { ShardService } from "./services/shard/shard.service";
 import { LoginInfo, UserInfo } from "./model/shard-model";
 export class BaseComponent {
 
-    LoginInfo = new LoginInfo;
-
     constructor(
         public _AngularFireAuth: AngularFireAuth,
         public _Router: Router,
@@ -18,9 +16,7 @@ export class BaseComponent {
         public _RealtimeDatabase: AngularFireDatabase,
         public _ShardService: ShardService,
     ) {
-        this._ShardService.SharedLoginInfo.subscribe(res => {
-            this.LoginInfo = res;
-        });
+
     }
 
     // 返回上一頁
@@ -141,72 +137,6 @@ export class BaseComponent {
             .catch((result) => {
 
             });
-    }
-
-    CheckMsgInit() {
-        // 發送訊息並刪除
-        let Subscribe = this.GetNotificationTasks().subscribe(Tasks => {
-            console.log('發送訊息並刪除', this.GetNowDateString());
-
-            Tasks.forEach(Task => {
-                if (Task.Sender == '管理員' && this.LoginInfo.Admin) {
-
-                    console.log('發送給管理員');
-
-                    this._RealtimeDatabase.object('/NotificationTasks/' + Task.key).remove()
-                        .then((result) => {
-                            this.PushNotification(Task);
-                        })
-                        .catch((result) => {
-                        });
-                }
-                if (Task.Sender == this.LoginInfo.Account) {
-
-                    console.log('發送給' + Task.Sender);
-
-                    this._RealtimeDatabase.object('/NotificationTasks/' + Task.key).remove()
-                        .then((result) => {
-                            this.PushNotification(Task);
-                        })
-                        .catch((result) => {
-                        });
-                }
-            });
-
-        });
-    }
-
-    // 推播
-
-    PushNotification(Message: any) {
-        let Option = {
-            body: Message.body,
-            onclick: function () {
-                parent.focus();
-                window.focus();
-                window.open('https://johch3n611u.github.io/Side-Project-Fabow/tasks');
-                this.close();
-            }
-        };
-
-        if ('Notification' in window) {
-            if ('serviceWorker' in navigator) {
-                let SWorker = false;
-                navigator.serviceWorker.ready.then(Registration => {
-                    // https://stackoverflow.com/questions/39418545/chrome-push-notification-how-to-open-url-adress-after-click/39457287
-                    Registration.showNotification(Message.Title, Option);
-                    SWorker = true;
-                });
-                if (!SWorker) {
-                    new Notification(Message.Title, Option);
-                }
-            } else {
-                new Notification(Message.Title, Option);
-            }
-
-        } else {
-            alert('\n 請打開通知以接收回報訊息!!\n\n Chrome 請點選 [ 網址列 ] 左側 ⓘ 開啟通知，感謝!!');
-        }
     }
 
 }
