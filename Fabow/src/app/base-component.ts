@@ -149,6 +149,10 @@ export class BaseComponent {
 
             Subscribe.unsubscribe();
 
+            setTimeout(() => {
+
+            }, 5000);
+
             console.log('GetNotificationTasks', this.GetNowDateString());
 
             Tasks.forEach(Task => {
