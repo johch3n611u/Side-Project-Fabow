@@ -40,3 +40,4 @@
 33. 原本想回去嘗試 [FCM](https://medium.com/mighty-ghost-hack/angular-8-firebase-cloud-messaging-push-notifications-cc80d9b36f82) 但發現還是必須跟 Firebase Auth 綁定，變成原來避免帳號相關流程複雜的問題又回來
 34. 所以還是嘗試別種辦法，目前想到是在開一個 Realtime Database Table 管控訊息，與任務資料拆開，或許會是最好的解法
 35. 拆開後還是會有類似問題，目前想到採取開關模式，如果觸發刪除則開關啟動直到刪除結束才關閉卡控。
+36. 後來沒有利用卡控，而是任務與推播資料分開，且同時為 Realtime 分別管理，在開發中狂遇到推播兩次的狀況，後來才發現是 service work 的鍋 ...
