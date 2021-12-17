@@ -146,9 +146,13 @@ export class BaseComponent {
     CheckMsgInit() {
         // 發送訊息並刪除
         let Subscribe = this.GetNotificationTasks().subscribe(Tasks => {
-            console.log('GetNotificationTasks', this.GetNowDateString());
+            console.log('發送訊息並刪除', this.GetNowDateString());
+
             Tasks.forEach(Task => {
                 if (Task.Sender == '管理員' && this.LoginInfo.Admin) {
+
+                    console.log('發送給管理員');
+
                     this._RealtimeDatabase.object('/NotificationTasks/' + Task.key).remove()
                         .then((result) => {
                             this.PushNotification(Task);
@@ -158,6 +162,8 @@ export class BaseComponent {
                 }
                 if (Task.Sender == this.LoginInfo.Account) {
 
+                    console.log('發送給' + Task.Sender);
+
                     this._RealtimeDatabase.object('/NotificationTasks/' + Task.key).remove()
                         .then((result) => {
                             this.PushNotification(Task);
@@ -166,6 +172,7 @@ export class BaseComponent {
                         });
                 }
             });
+
         });
     }
 
