@@ -14,7 +14,8 @@ export class ReportComponent implements OnInit {
 
 
     LoginInfo = new LoginInfo;
-    Tasks: Task[] = [] as Task[];
+    AllTasks: Task[] = [] as Task[];
+    FilterTasks: Task[] = [] as Task[];
 
     constructor(
         public _ShardService: ShardService,
@@ -28,7 +29,8 @@ export class ReportComponent implements OnInit {
             // this.AuthNavigate();
         });
         this._ShardService.SharedTasks.subscribe(res => {
-            this.Tasks = res;
+            this.AllTasks = res;
+            this.Filter();
         });
     }
 
@@ -60,7 +62,7 @@ export class ReportComponent implements OnInit {
     // 匯出
     Export() {
 
-        this.Tasks.forEach((Task, index) => {
+        this.FilterTasks.forEach((Task, index) => {
             let Temp = [];
             Temp.push(index + 1);
             Temp.push(Task.Principal);
@@ -83,8 +85,41 @@ export class ReportComponent implements OnInit {
     }
 
     Select = '';
-    FilterTasks = [];
     Filter() {
-
+        console.log(this.Select);
+        if (this.Select != '') {
+            this.FilterTasks = [];
+            this.AllTasks.forEach(Task => {
+                console.log(Task.Task.indexOf(this.Select));
+                if (Task.Task.indexOf(this.Select) != -1) {
+                    this.FilterTasks.push(Task);
+                }
+                if (Task.Principal.indexOf(this.Select) != -1) {
+                    this.FilterTasks.push(Task);
+                }
+                if (this.TranslationStatus(Task.IsClosed).indexOf(this.Select) != -1) {
+                    this.FilterTasks.push(Task);
+                }
+                if (Task.Task.indexOf(this.Select) != -1) {
+                    this.FilterTasks.push(Task);
+                }
+                if (moment(Task.Date).format('YYYY-MM-DD').indexOf(this.Select) != -1) {
+                    this.FilterTasks.push(Task);
+                }
+                Task.Remarks.forEach(Remark => {
+                    if (Remark.Principal.indexOf(this.Select) != -1) {
+                        this.FilterTasks.push(Task);
+                    }
+                    if (Remark.Info.indexOf(this.Select) != -1) {
+                        this.FilterTasks.push(Task);
+                    }
+                    if (moment(Remark.Date).format('YYYY-MM-DD HH:mm:ss').indexOf(this.Select) != -1) {
+                        this.FilterTasks.push(Task);
+                    }
+                });
+            });
+        } else {
+            this.FilterTasks = this.AllTasks;
+        }
     }
 }

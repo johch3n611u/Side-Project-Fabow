@@ -4,11 +4,11 @@
         返回工作項目
     </button>
     <button (click)="Export()" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2">匯出Excel</button>
-    <button type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2">匯出Pdf</button>
-    <input class="form-control InputCol Mgbtn col-xs-12 col-md-2" type="text" placeholder="搜尋" (change)="Filter()" [(ngModel)]="Select">
+    <button onclick="window.print();" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2">匯出Pdf</button>
+    <input class="form-control InputCol Mgbtn col-xs-12 col-md-2" type="text" placeholder="搜尋" (keyup)="Filter()" [(ngModel)]="Select">
 </div>
 
-<table style="margin-top: 30px;">
+<table style="margin: 30px 0;">
     <thead style="background-color: #abb3b9;">
         <th>負責人員</th>
         <th>發布日期</th>
@@ -17,7 +17,7 @@
         <th>是否結案</th>
     </thead>
     <tbody>
-        <tr *ngFor="let Task of Tasks;let i = index;">
+        <tr *ngFor="let Task of FilterTasks;let i = index;">
             <td>{{Task.Principal}}</td>
             <td>{{Task.Date|date:'yyyy-MM-dd'}}</td>
             <td>{{Task.Task}}</td>
