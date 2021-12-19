@@ -1,0 +1,32 @@
+<h2 class="MgTitle">報表</h2>
+<div class="col-12">
+    <button type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2" [routerLink]="['/tasks']" [queryParams]="{ Admin:LoginInfo.Admin}">
+        返回工作項目
+    </button>
+    <button (click)="Export()" type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2">匯出Excel</button>
+    <button type="submit" class="btn btn-secondary Mgbtn col-xs-12 col-md-2">匯出Pdf</button>
+    <input class="form-control InputCol Mgbtn col-xs-12 col-md-2" type="text" placeholder="搜尋" (change)="Filter()" [(ngModel)]="Select">
+</div>
+
+<table style="margin-top: 30px;">
+    <thead style="background-color: #abb3b9;">
+        <th>負責人員</th>
+        <th>發布日期</th>
+        <th>內容</th>
+        <th>詳細內容</th>
+        <th>是否結案</th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let Task of Tasks;let i = index;">
+            <td>{{Task.Principal}}</td>
+            <td>{{Task.Date|date:'yyyy-MM-dd'}}</td>
+            <td>{{Task.Task}}</td>
+            <td>
+                <p *ngFor="let Remark of Task.Remarks">
+                    [{{Remark.Date|date:'yyyy-MM-dd HH:mm:ss'}}]{{Remark.Principal}}:{{Remark.Info}}
+                </p>
+            </td>
+            <td>{{TranslationStatus(Task.IsClosed)}}</td>
+        </tr>
+    </tbody>
+</table>

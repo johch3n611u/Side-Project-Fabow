@@ -16,6 +16,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 // import { MessagingService } from './messaging.service';
 import { AsyncPipe } from '@angular/common';
 import { ShardService } from './services/shard/shard.service';
+import { ReportComponent } from './pages/report/report.component';
 
 @NgModule({
     declarations: [
@@ -23,6 +24,7 @@ import { ShardService } from './services/shard/shard.service';
         TasksComponent,
         UsersComponent,
         EditTaskComponent,
+        ReportComponent,
     ],
     imports: [
         BrowserModule,
