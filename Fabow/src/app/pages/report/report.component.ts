@@ -26,7 +26,7 @@ export class ReportComponent implements OnInit {
     ngOnInit(): void {
         this._ShardService.SharedLoginInfo.subscribe(res => {
             this.LoginInfo = res;
-            // this.AuthNavigate();
+            this.AuthNavigate();
         });
         this._ShardService.SharedTasks.subscribe(res => {
             this.AllTasks = res;
