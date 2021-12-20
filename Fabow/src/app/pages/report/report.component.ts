@@ -61,7 +61,7 @@ export class ReportComponent implements OnInit {
 
     // 匯出
     Export() {
-
+        this.Excel = [];
         this.FilterTasks.forEach((Task, index) => {
             let Temp = [];
             Temp.push(index + 1);
