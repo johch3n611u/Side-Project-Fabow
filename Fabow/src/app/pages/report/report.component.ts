@@ -90,33 +90,39 @@ export class ReportComponent implements OnInit {
         if (this.Select != '') {
             this.FilterTasks = [];
             this.AllTasks.forEach(Task => {
-                console.log(Task.Task.indexOf(this.Select));
+
+                let Selected = false;
+
                 if (Task.Task.indexOf(this.Select) != -1) {
-                    this.FilterTasks.push(Task);
+                    Selected = true;
                 }
                 if (Task.Principal.indexOf(this.Select) != -1) {
-                    this.FilterTasks.push(Task);
+                    Selected = true;
                 }
                 if (this.TranslationStatus(Task.IsClosed).indexOf(this.Select) != -1) {
-                    this.FilterTasks.push(Task);
+                    Selected = true;
                 }
                 if (Task.Task.indexOf(this.Select) != -1) {
-                    this.FilterTasks.push(Task);
+                    Selected = true;
                 }
                 if (moment(Task.Date).format('YYYY-MM-DD').indexOf(this.Select) != -1) {
-                    this.FilterTasks.push(Task);
+                    Selected = true;
                 }
                 Task.Remarks.forEach(Remark => {
                     if (Remark.Principal.indexOf(this.Select) != -1) {
-                        this.FilterTasks.push(Task);
+                        Selected = true;
                     }
                     if (Remark.Info.indexOf(this.Select) != -1) {
-                        this.FilterTasks.push(Task);
+                        Selected = true;
                     }
                     if (moment(Remark.Date).format('YYYY-MM-DD HH:mm:ss').indexOf(this.Select) != -1) {
-                        this.FilterTasks.push(Task);
+                        Selected = true;
                     }
                 });
+
+                if (Selected) {
+                    this.FilterTasks.push(Task);
+                }
             });
         } else {
             this.FilterTasks = this.AllTasks;
