@@ -229,4 +229,10 @@ export class TasksComponent extends BaseComponent implements OnInit, OnChanges {
     }
 
     HoverClass = 'MouseOut';
+
+    DeleteTask(TaskId) {
+        if (confirm('請確定需不需匯出，按下確定將永久刪除')) {
+            let Collection = this._CloudFirestore.doc('Tasks/' + TaskId).delete();
+        }
+    }
 }

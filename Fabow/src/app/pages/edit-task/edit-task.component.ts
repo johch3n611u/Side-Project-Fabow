@@ -70,7 +70,10 @@ export class EditTaskComponent extends BaseComponent implements OnInit {
             } else {
                 this.Title = '編輯';
                 let Collection = this._CloudFirestore.doc('Tasks/' + TaskId).valueChanges();
-                Collection.subscribe((res: any) => { this.Task = res; });
+                Collection.subscribe((res: any) => {
+                    this.Task = res;
+                    this.Task.id = TaskId;
+                });
             }
         });
     }
@@ -89,11 +92,12 @@ export class EditTaskComponent extends BaseComponent implements OnInit {
                     });
                 this._Router.navigate(['tasks']);
             } else {
+                console.log(this.Task);
                 let Collection = this._CloudFirestore.doc('Tasks/' + this.Task.id).update({
                     Date: this.GetNowDateString(),
                     IsClosed: false,
                     Principal: Principal,
-                    Task: this.Task
+                    Task: this.Task.Task,
                 });
                 this._Router.navigate(['tasks']);
             }

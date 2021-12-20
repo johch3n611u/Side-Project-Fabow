@@ -55,13 +55,11 @@ export class ReportComponent implements OnInit {
         return Status;
     }
 
-    Excel = [
-        ['項次', '負責人員', '發布日期', '內容', '是否結案', '詳細內容']
-    ];
-
+    Excel = [];
     // 匯出
     Export() {
         this.Excel = [];
+        this.Excel.push(['項次', '負責人員', '發布日期', '內容', '是否結案', '詳細內容']);
         this.FilterTasks.forEach((Task, index) => {
             let Temp = [];
             Temp.push(index + 1);
