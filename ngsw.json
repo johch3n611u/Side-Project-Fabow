@@ -1,0 +1,83 @@
+{
+  "configVersion": 1,
+  "timestamp": 1639966256666,
+  "index": "/Side-Project-Fabow/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/Side-Project-Fabow/4.c44e0054914270401e66.js",
+        "/Side-Project-Fabow/favicon.ico",
+        "/Side-Project-Fabow/index.html",
+        "/Side-Project-Fabow/main.44fff9b76ef1fe371656.js",
+        "/Side-Project-Fabow/manifest.webmanifest",
+        "/Side-Project-Fabow/polyfills.05f39117d8cb3510fe25.js",
+        "/Side-Project-Fabow/runtime.69767a8a788460a9ce88.js",
+        "/Side-Project-Fabow/styles.7aa549272fe4a380e318.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/Side-Project-Fabow/assets/icons/icon-128x128.png",
+        "/Side-Project-Fabow/assets/icons/icon-144x144.png",
+        "/Side-Project-Fabow/assets/icons/icon-152x152.png",
+        "/Side-Project-Fabow/assets/icons/icon-192x192.png",
+        "/Side-Project-Fabow/assets/icons/icon-384x384.png",
+        "/Side-Project-Fabow/assets/icons/icon-512x512.png",
+        "/Side-Project-Fabow/assets/icons/icon-72x72.png",
+        "/Side-Project-Fabow/assets/icons/icon-96x96.png"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/Side-Project-Fabow/4.c44e0054914270401e66.js": "3a6f1b8e7fb676d36f41483877f2fb544e611e90",
+    "/Side-Project-Fabow/assets/icons/icon-128x128.png": "dae3b6ed49bdaf4327b92531d4b5b4a5d30c7532",
+    "/Side-Project-Fabow/assets/icons/icon-144x144.png": "b0bd89982e08f9bd2b642928f5391915b74799a7",
+    "/Side-Project-Fabow/assets/icons/icon-152x152.png": "7479a9477815dfd9668d60f8b3b2fba709b91310",
+    "/Side-Project-Fabow/assets/icons/icon-192x192.png": "1abd80d431a237a853ce38147d8c63752f10933b",
+    "/Side-Project-Fabow/assets/icons/icon-384x384.png": "329749cd6393768d3131ed6304c136b1ca05f2fd",
+    "/Side-Project-Fabow/assets/icons/icon-512x512.png": "559d9c4318b45a1f2b10596bbb4c960fe521dbcc",
+    "/Side-Project-Fabow/assets/icons/icon-72x72.png": "c457e56089a36952cd67156f9996bc4ce54a5ed9",
+    "/Side-Project-Fabow/assets/icons/icon-96x96.png": "3914125a4b445bf111c5627875fc190f560daa41",
+    "/Side-Project-Fabow/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
+    "/Side-Project-Fabow/index.html": "edf052db0ad4be6f4224a328dabd24e959274d8e",
+    "/Side-Project-Fabow/main.44fff9b76ef1fe371656.js": "b24dc039088393ef2947e99d9995638fa235047c",
+    "/Side-Project-Fabow/manifest.webmanifest": "8034e8919d78adbf68a139f73829bf2c62bacaa8",
+    "/Side-Project-Fabow/polyfills.05f39117d8cb3510fe25.js": "4bf2d4f4d11558c7d57f08cdb99b058cdd420eaa",
+    "/Side-Project-Fabow/runtime.69767a8a788460a9ce88.js": "17f4ffb71ea27124fff80ebfb405d6c64f6aea20",
+    "/Side-Project-Fabow/styles.7aa549272fe4a380e318.css": "b48381120f6955f7106409785865a9bfac928cb1"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
