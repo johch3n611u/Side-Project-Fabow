@@ -45,6 +45,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
 
         this._ShardService.SharedUsersInfo.subscribe(res => {
             this.UsersInfo = res;
+            console.log('this.UsersInfo',this.UsersInfo);
         });
     }
 

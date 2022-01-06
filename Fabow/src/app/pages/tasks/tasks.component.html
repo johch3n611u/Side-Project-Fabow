@@ -1,4 +1,4 @@
-<h2 class="MgTitle" style="display: inline-block;">指派項目</h2>
+<h2 class="MgTitle" style="display: inline-block;">指派項目 {{this.TempRemark.Principal}}</h2>
 <p class="Mgbtn" style="display: inline-block;">
     <span>支援推播:{{TranslationPermission(AppInitInfo.NotificationSup)}}</span>、
     <span>推播權限:{{TranslationPermission(AppInitInfo.NotificationStatus)}}</span>、
@@ -52,7 +52,8 @@
                     </li>
                     <hr>
                     <div class="row">
-                        <select [disabled]="!LoginInfo.Admin" class="form-control InputCol Mgbtn" id="Principal" [(ngModel)]="TempRemark.Principal">
+                        <!-- [disabled]="!LoginInfo.Admin" -->
+                        <select [disabled]="true" class="form-control InputCol Mgbtn" id="Principal" [(ngModel)]="TempRemark.Principal">
                             <option value="">請選擇</option>
                             <option *ngFor="let User of UsersInfo;let i = index;" [value]="User.Account">
                                 {{User.Account}}

@@ -55,6 +55,10 @@ export class TasksComponent extends BaseComponent implements OnInit, OnChanges {
 
         this._ShardService.SharedLoginInfo.subscribe(res => {
             this.LoginInfo = res;
+            if(this.LoginInfo.Admin)
+            {
+                this.TempRemark.Principal = 'Jason';
+            }
             this.GetTasks();
         });
 
@@ -165,7 +169,6 @@ export class TasksComponent extends BaseComponent implements OnInit, OnChanges {
             .then((result) => {
                 this.LoginInfo.DisplayName = '管理員';
                 this.LoginInfo.Admin = true;
-                this.TempRemark.Principal = 'Jason';
                 this.KeepLocalStorage();
             }).catch((error) => {
                 window.alert('帳號密碼錯誤，如有問題請詢問管理員!!');

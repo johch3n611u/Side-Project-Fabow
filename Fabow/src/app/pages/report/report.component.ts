@@ -60,11 +60,6 @@ export class ReportComponent implements OnInit {
     Export() {
         this.Excel = [];
         this.Excel.push(['項次', '負責人員', '發布日期', '內容', '是否結案', '詳細內容']);
-
-        if (this.FilterTasks == undefined) {
-            this.FilterTasks = this.AllTasks
-        }
-
         this.FilterTasks.forEach((Task, index) => {
             let Temp = [];
             Temp.push(index + 1);
@@ -72,13 +67,14 @@ export class ReportComponent implements OnInit {
             Temp.push(moment(Task.Date).format('YYYY-MM-DD'));
             Temp.push(Task.Task);
             Temp.push(this.TranslationStatus(Task.IsClosed));
-
-            Task.Remarks.forEach(Remark => {
-                let TempPush = JSON.parse(JSON.stringify(Temp));
-                let TempRemark = '[' + moment(Remark.Date).format('YYYY-MM-DD HH:mm:ss') + ']' + Remark.Principal + ':' + Remark.Info;
-                TempPush.push(TempRemark);
-                this.Excel.push(TempPush);
-            });
+            if (Task.Remarks != undefined) {
+                Task.Remarks.forEach(Remark => {
+                    let TempPush = JSON.parse(JSON.stringify(Temp));
+                    let TempRemark = '[' + moment(Remark.Date).format('YYYY-MM-DD HH:mm:ss') + ']' + Remark.Principal + ':' + Remark.Info;
+                    TempPush.push(TempRemark);
+                    this.Excel.push(TempPush);
+                });
+            }
         });
 
         const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(this.Excel);
